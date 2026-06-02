@@ -1,669 +1,1313 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Hybrid SUV Finder — Ireland</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #f4f5f7; color: #1a1a2e;
-      -webkit-font-smoothing: antialiased;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Finder - Hybrid Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --md-primary: #1a73e8;
+  --md-primary-dark: #1557b0;
+  --md-primary-light: #e8f0fe;
+  --md-on-primary: #fff;
+  --md-surface: #fff;
+  --md-surface-dim: #f4f5f7;
+  --md-on-surface: #1f1f1f;
+  --md-on-surface-variant: #444746;
+  --md-outline: #dadce0;
+  --md-error: #d93025;
+  --md-success: #188038;
+  --md-warning: #f9ab00;
+  --md-elevation-1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.08);
+  --md-elevation-2: 0 2px 6px rgba(0,0,0,0.15), 0 1px 4px rgba(0,0,0,0.12);
+  --md-elevation-3: 0 4px 12px rgba(0,0,0,0.18), 0 2px 6px rgba(0,0,0,0.14);
+  --md-radius: 12px;
+  --md-radius-sm: 8px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--md-surface-dim);
+  color: var(--md-on-surface);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 80px;
+}
+.app-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--md-primary);
+  color: var(--md-on-primary);
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+  box-shadow: var(--md-elevation-2);
+}
+.app-bar h1 { font-size: 1.25rem; font-weight: 600; flex: 1; }
+.app-bar .subtitle { font-size: 0.75rem; opacity: 0.85; display: block; }
+.tabs {
+  display: flex; overflow-x: auto;
+  background: var(--md-surface);
+  border-bottom: 1px solid var(--md-outline);
+  position: sticky; top: 52px; z-index: 99;
+}
+.tabs button {
+  flex: 1; min-width: 120px;
+  padding: 12px 16px;
+  border: none; background: none;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem; font-weight: 500;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+.tabs button.active { color: var(--md-primary); }
+.tabs button.active::after {
+  content: ''; position: absolute; bottom: 0; left: 16px; right: 16px;
+  height: 3px; background: var(--md-primary); border-radius: 3px 3px 0 0;
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.container { max-width: 800px; margin: 0 auto; padding: 12px 16px; }
+.filter-bar {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  padding: 12px 0; margin-bottom: 4px;
+}
+.filter-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--md-outline);
+  border-radius: 20px;
+  background: var(--md-surface);
+  font-size: 0.8125rem; font-weight: 500;
+  color: var(--md-on-surface-variant);
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+.filter-chip.active {
+  background: var(--md-primary-light);
+  border-color: var(--md-primary);
+  color: var(--md-primary);
+}
+.filter-chip .count {
+  background: var(--md-surface-dim);
+  padding: 0 6px; border-radius: 10px;
+  font-size: 0.75rem;
+}
+.filter-chip.active .count { background: var(--md-primary); color: var(--md-on-primary); }
+.stats-bar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0;
+  font-size: 0.8125rem; color: var(--md-on-surface-variant);
+  border-bottom: 1px solid var(--md-outline); margin-bottom: 12px;
+}
+.listing-card {
+  background: var(--md-surface);
+  border-radius: var(--md-radius);
+  box-shadow: var(--md-elevation-1);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+  border: 1px solid transparent;
+}
+.listing-card:hover { box-shadow: var(--md-elevation-2); }
+.listing-card.highlight { border-color: var(--md-primary); }
+.listing-header {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  margin-bottom: 8px;
+}
+.listing-title {
+  font-size: 1rem; font-weight: 600; color: var(--md-on-surface);
+  flex: 1;
+}
+.listing-price {
+  font-size: 1.125rem; font-weight: 700; color: var(--md-primary);
+  white-space: nowrap; margin-left: 12px;
+}
+.listing-meta {
+  display: flex; flex-wrap: wrap; gap: 4px 16px;
+  font-size: 0.8125rem; color: var(--md-on-surface-variant);
+  margin-bottom: 8px;
+}
+.listing-meta span { display: inline-flex; align-items: center; gap: 4px; }
+.tag {
+  display: inline-block; padding: 2px 8px;
+  border-radius: 4px; font-size: 0.6875rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.02em;
+}
+.tag-source { background: #e8f0fe; color: var(--md-primary); }
+.tag-ev { background: #e6f4ea; color: var(--md-success); }
+.tag-phev { background: #fef7e0; color: #e37400; }
+.tag-ecvt { background: #fce8e6; color: var(--md-error); }
+.tag-hev6 { background: #e8f0fe; color: #1967d2; }
+.rel-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 24px; height: 24px; border-radius: 50%;
+  font-size: 0.7rem; font-weight: 700; color: var(--md-on-primary);
+  flex-shrink: 0;
+}
+.rel-a { background: #188038; }
+.rel-b { background: #f9ab00; color: #1f1f1f; }
+.rel-c { background: #d93025; }
+.listing-actions {
+  display: flex; gap: 8px; margin-top: 12px;
+  flex-wrap: wrap;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 24px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8125rem; font-weight: 500;
+  border: none; cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--md-primary); color: var(--md-on-primary);
+}
+.btn-primary:hover { background: var(--md-primary-dark); }
+.btn-outline {
+  background: none; border: 1px solid var(--md-outline);
+  color: var(--md-on-surface-variant);
+}
+.btn-outline:hover { background: var(--md-surface-dim); }
+.btn-sm { padding: 4px 12px; font-size: 0.75rem; }
 
-    /* ─── App Bar ─── */
-    .appbar {
-      background: #fff; border-bottom: 1px solid #e8eaed;
-      padding: 0 16px; position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 1px 3px rgba(0,0,0,.06);
-    }
-    .appbar-inner {
-      max-width: 1000px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 56px;
-    }
-    .appbar-title { font-size: 1.15rem; font-weight: 600; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
-    .appbar-title small { font-weight: 400; font-size: .8rem; color: #5f6368; }
-    .appbar-badge {
-      background: #e8f5e9; color: #2e7d32; font-size: .7rem; font-weight: 600;
-      padding: 3px 10px; border-radius: 12px; white-space: nowrap;
-    }
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  justify-content: center; align-items: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--md-surface);
+  border-radius: var(--md-radius);
+  box-shadow: var(--md-elevation-3);
+  max-width: 600px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  animation: modalIn 0.2s ease;
+}
+@keyframes modalIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 24px 12px;
+  border-bottom: 1px solid var(--md-outline);
+}
+.modal-header h2 { font-size: 1.125rem; font-weight: 600; }
+.modal-close {
+  background: none; border: none; font-size: 1.5rem; cursor: pointer;
+  color: var(--md-on-surface-variant); padding: 4px; line-height: 1;
+}
+.modal-body { padding: 16px 24px 24px; }
+.feature-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.feature-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 0; font-size: 0.875rem;
+  border-bottom: 1px solid var(--md-surface-dim);
+}
+.feature-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+.feature-yes .icon { color: var(--md-success); }
+.feature-no .icon { color: var(--md-error); }
+.feature-opt .icon { color: var(--md-warning); }
+.model-pros-cons { margin-top: 16px; }
+.model-pros-cons h3 { font-size: 0.9375rem; margin-bottom: 8px; }
+.model-pros-cons ul { padding-left: 20px; font-size: 0.8125rem; }
+.model-pros-cons li { margin-bottom: 4px; }
 
-    /* ─── Container ─── */
-    .container { max-width: 1000px; margin: 0 auto; padding: 16px; }
+/* NI Import Guide */
+.guide-card {
+  background: var(--md-surface);
+  border-radius: var(--md-radius);
+  box-shadow: var(--md-elevation-1);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.guide-card h2 { font-size: 1.125rem; font-weight: 600; margin-bottom: 12px; }
+.guide-card h3 { font-size: 0.9375rem; font-weight: 600; margin: 16px 0 8px; }
+.guide-card p, .guide-card li { font-size: 0.875rem; line-height: 1.6; color: var(--md-on-surface-variant); }
+.guide-card ul, .guide-card ol { padding-left: 20px; }
+.guide-card li { margin-bottom: 6px; }
+.step-list { counter-reset: step; }
+.step-list li {
+  counter-increment: step;
+  padding-left: 8px;
+}
+.step-list li::marker {
+  content: "Step " counter(step) ": ";
+  font-weight: 600; color: var(--md-primary);
+}
+.info-box {
+  background: var(--md-primary-light);
+  border-radius: var(--md-radius-sm);
+  padding: 16px; margin: 12px 0;
+  border-left: 4px solid var(--md-primary);
+}
+.info-box strong { color: var(--md-primary); }
+.warn-box {
+  background: #fef7e0;
+  border-radius: var(--md-radius-sm);
+  padding: 16px; margin: 12px 0;
+  border-left: 4px solid var(--md-warning);
+}
+.empty-state {
+  text-align: center; padding: 48px 16px;
+  color: var(--md-on-surface-variant);
+}
+.empty-state h2 { font-size: 1.25rem; margin-bottom: 8px; }
+.empty-state p { font-size: 0.875rem; }
+.source-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: var(--md-primary); text-decoration: none;
+  font-size: 0.8125rem; font-weight: 500;
+}
+.source-link:hover { text-decoration: underline; }
 
-    /* ─── Status Bar ─── */
-    .status-bar {
-      display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
-      font-size: .8rem; color: #5f6368; margin-bottom: 16px;
-      background: #fff; border-radius: 12px; padding: 12px 16px;
-      box-shadow: 0 1px 2px rgba(0,0,0,.06);
-    }
-    .status-bar .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
-    .status-bar .dot.green { background: #34a853; }
-
-    /* ─── Chips ─── */
-    .chips {
-      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;
-    }
-    .chip {
-      background: #fff; border: 1px solid #dadce0; border-radius: 8px;
-      padding: 6px 14px; font-size: .78rem; font-weight: 500; color: #5f6368;
-      display: flex; align-items: center; gap: 5px;
-    }
-
-    /* ─── Section Headers ─── */
-    .section-title {
-      font-size: 1.1rem; font-weight: 600; color: #1a1a2e;
-      margin: 24px 0 12px; display: flex; align-items: center; gap: 8px;
-    }
-    .section-count {
-      background: #e8eaed; border-radius: 10px; padding: 1px 10px;
-      font-size: .75rem; font-weight: 600; color: #5f6368;
-    }
-
-    /* ─── Source Badge ─── */
-    .src-badge {
-      display: inline-flex; align-items: center; gap: 3px;
-      font-size: .68rem; font-weight: 600; padding: 2px 8px;
-      border-radius: 6px; color: #fff;
-    }
-    .src-badge.ci { background: #1a73e8; }
-    .src-badge.cz { background: #e94235; }
-
-    .fuel-badge {
-      display: inline-block; font-size: .68rem; font-weight: 600;
-      padding: 2px 8px; border-radius: 6px; color: #fff;
-    }
-    .fuel-badge.hev { background: #34a853; }
-    .fuel-badge.phev { background: #7b1fa2; }
-
-    /* ─── Cards ─── */
-    .card {
-      background: #fff; border-radius: 14px; padding: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08);
-      margin-bottom: 10px;
-      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
-    }
-    .card.highlight { box-shadow: 0 0 0 2px #34a853, 0 2px 8px rgba(52,168,83,.2); }
-
-    .card-rank {
-      font-size: 1.3rem; font-weight: 700; color: #c4c7cc;
-      min-width: 28px;
-    }
-    .card-body { flex: 1; min-width: 160px; }
-    .card-title { font-weight: 600; font-size: .95rem; color: #1a1a2e; }
-    .card-sub {
-      font-size: .78rem; color: #5f6368; margin-top: 2px;
-      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
-    }
-    .card-detail {
-      display: flex; align-items: center; gap: 14px;
-      font-size: .85rem; color: #1a1a2e; font-weight: 500;
-      white-space: nowrap;
-    }
-    .card-detail .label { color: #5f6368; font-weight: 400; }
-    .card-actions { display: flex; gap: 6px; margin-left: auto; }
-    .card-why {
-      width: 100%; font-size: .78rem; color: #e37400; margin-top: 4px;
-      display: flex; align-items: center; gap: 4px;
-    }
-
-    /* ─── Buttons ─── */
-    .btn {
-      display: inline-flex; align-items: center; gap: 4px;
-      padding: 7px 14px; border-radius: 8px; font-size: .78rem;
-      font-weight: 500; cursor: pointer; border: 1px solid #dadce0;
-      background: #fff; color: #1a73e8; text-decoration: none;
-      white-space: nowrap; transition: background .15s;
-    }
-    .btn:hover { background: #f1f3f4; }
-    .btn:active { background: #e8eaed; }
-    .btn.primary {
-      background: #1a73e8; color: #fff; border-color: #1a73e8;
-    }
-    .btn.primary:hover { background: #1557b0; }
-    .btn.primary:active { background: #0d47a1; }
-    .btn.sm { padding: 5px 10px; font-size: .72rem; }
-
-    /* ─── Modal ─── */
-    .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
-      justify-content: center; align-items: flex-start; z-index: 1000;
-      padding: 16px; overflow-y: auto;
-      -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-    }
-    .modal-overlay.open { display: flex; }
-    .modal {
-      background: #fff; border-radius: 16px; padding: 24px;
-      max-width: 520px; width: 100%; margin-top: 40px;
-      box-shadow: 0 8px 32px rgba(0,0,0,.2); position: relative;
-    }
-    .modal-close {
-      position: absolute; top: 16px; right: 16px;
-      background: none; border: none; font-size: 1.4rem;
-      color: #5f6368; cursor: pointer; width: 32px; height: 32px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    }
-    .modal-close:hover { background: #f1f3f4; }
-    .modal h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 2px; padding-right: 32px; }
-    .modal-sub { font-size: .82rem; color: #5f6368; margin-bottom: 16px; }
-    .modal table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-    .modal td { padding: 6px 0; border-bottom: 1px solid #f1f3f4; }
-    .modal td:first-child { font-weight: 500; color: #5f6368; width: 50%; }
-    .feat-yes { color: #34a853; } .feat-no { color: #dadce0; } .feat-opt { color: #f9ab00; }
-
-    /* ─── Collapsible ─── */
-    .collapse-header {
-      display: flex; align-items: center; gap: 8px; cursor: pointer;
-      padding: 12px 0 8px; user-select: none; color: #5f6368; font-size: .85rem;
-    }
-    .collapse-header:hover { color: #1a1a2e; }
-    .collapse-header .arrow { transition: transform .2s; }
-    .collapse-header.open .arrow { transform: rotate(90deg); }
-    .collapse-body { display: none; }
-    .collapse-body.open { display: block; }
-
-    /* ─── Manual Links ─── */
-    .manual-links {
-      background: #fff; border-radius: 14px; padding: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-top: 20px;
-    }
-    .manual-links h3 { font-size: .95rem; font-weight: 600; margin-bottom: 12px; }
-    .manual-links .link-group { margin-bottom: 10px; }
-    .manual-links .link-group strong { font-size: .82rem; }
-    .manual-links .link-group a {
-      display: block; font-size: .78rem; color: #1a73e8;
-      word-break: break-all; margin-top: 2px;
-    }
-    .manual-links .link-group a:hover { text-decoration: underline; }
-
-    /* ─── Next Steps ─── */
-    .next-steps {
-      background: #fff; border-radius: 14px; padding: 16px;
-      box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-top: 12px;
-    }
-    .next-steps h3 { font-size: .95rem; font-weight: 600; margin-bottom: 8px; }
-    .next-steps ol { padding-left: 20px; font-size: .82rem; color: #5f6368; }
-    .next-steps li { margin-bottom: 6px; }
-    .next-steps li::marker { color: #1a73e8; font-weight: 600; }
-
-    /* ─── Footer ─── */
-    footer {
-      text-align: center; font-size: .78rem; color: #9aa0a6;
-      padding: 24px 0 32px; margin-top: 12px;
-    }
-    footer a { color: #1a73e8; text-decoration: none; }
-    footer a:hover { text-decoration: underline; }
-
-    /* ─── Responsive ─── */
-    @media (max-width: 640px) {
-      .appbar-inner { height: 48px; }
-      .appbar-title { font-size: 1rem; }
-      .appbar-title small { display: none; }
-      .appbar-badge { font-size: .65rem; padding: 2px 8px; }
-      .container { padding: 12px; }
-      .card { padding: 12px; gap: 8px; }
-      .card-rank { font-size: 1rem; min-width: 20px; }
-      .card-title { font-size: .88rem; }
-      .card-detail { font-size: .8rem; gap: 10px; flex-wrap: wrap; }
-      .card-actions { width: 100%; justify-content: flex-end; }
-      .btn.sm { padding: 6px 10px; font-size: .7rem; }
-      .modal { padding: 20px; margin-top: 24px; }
-      .status-bar { font-size: .75rem; padding: 10px 12px; }
-    }
-    @media (max-width: 400px) {
-      .card-actions .btn { flex: 1; justify-content: center; }
-    }
-  </style>
+/* Responsive */
+@media (max-width: 600px) {
+  .app-bar { padding: 10px 12px; }
+  .app-bar h1 { font-size: 1.1rem; }
+  .container { padding: 8px 12px; }
+  .listing-card { padding: 12px; }
+  .listing-header { flex-direction: column; }
+  .listing-price { margin-left: 0; margin-top: 4px; }
+  .feature-grid { grid-template-columns: 1fr; }
+  .modal { max-height: 85vh; }
+  .modal-header, .modal-body { padding-left: 16px; padding-right: 16px; }
+}
+@media (min-width: 900px) {
+  .container { max-width: 960px; }
+}
+.progress-bar {
+  background: var(--md-outline);
+  border-radius: 10px; height: 8px; overflow: hidden;
+  margin: 8px 0;
+}
+.progress-fill {
+  height: 100%; border-radius: 10px;
+  background: var(--md-primary);
+  transition: width 0.4s ease;
+}
+</style>
 </head>
 <body>
 
-<!-- ─── App Bar ─── -->
-<header class="appbar">
-  <div class="appbar-inner">
-    <div class="appbar-title">
-      🚗 Hybrid SUV Finder
-      <small>Ireland</small>
-    </div>
-    <span class="appbar-badge" id="totalCount">0 listings</span>
-  </div>
+<header class="app-bar">
+  <h1>
+    <span>Car Finder</span>
+    <span class="subtitle">Hybrid • Ireland</span>
+  </h1>
+  <span id="lastUpdated" style="font-size:0.7rem;opacity:0.8"></span>
 </header>
 
-<!-- ─── Main ─── -->
+<div class="tabs" role="tablist">
+  <button class="active" data-tab="listings" role="tab">Listings</button>
+  <button data-tab="guide" role="tab">NI Import Guide</button>
+</div>
+
 <div class="container">
 
-  <!-- Status -->
-  <div class="status-bar">
-    <span class="dot green"></span>
-    Scraped <span id="scrapeDate">…</span>
-    <span>&middot;</span>
-    <span id="sourceInfo">CarsIreland + Carzone</span>
+<div id="tab-listings" class="tab-content active">
+
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-chip active" data-filter="all">All <span class="count" id="countAll">0</span></span>
+    <span class="filter-chip" data-filter="suv">SUV <span class="count" id="countSuv">0</span></span>
+    <span class="filter-chip" data-filter="sedan">Sedan <span class="count" id="countSedan">0</span></span>
+    <span class="filter-chip" data-filter="phev">PHEV <span class="count" id="countPhev">0</span></span>
+    <span class="filter-chip" data-filter="hev">HEV <span class="count" id="countHev">0</span></span>
   </div>
 
-  <!-- Filter Chips -->
-  <div class="chips">
-    <span class="chip">⛽ Hybrid / PHEV</span>
-    <span class="chip">💰 ≤€35k</span>
-    <span class="chip">📏 ≤100k km</span>
-    <span class="chip">📅 2017+</span>
-    <span class="chip">⚙ Auto</span>
+  <div class="stats-bar">
+    <span id="statsText">Loading...</span>
+    <span id="scrapedAt" style="font-size:0.75rem;color:var(--md-on-surface-variant)"></span>
   </div>
 
-  <!-- Top 5 -->
-  <div class="section-title">🏆 Top 5 Picks</div>
-  <div id="top5"></div>
+  <div id="listingsContainer"></div>
 
-  <!-- All Other Hybrids (collapsible) -->
-  <div id="otherSection">
-    <div class="section-title" style="margin-top: 4px;">
-      📋 All Hybrids
-      <span class="section-count" id="otherCount">0</span>
-    </div>
-    <div id="otherHybrids"></div>
-  </div>
-
-  <!-- Manual Links -->
-  <div class="manual-links">
-    <h3>🔍 Manual Search Links</h3>
-    <p style="font-size:.78rem;color:#5f6368;margin-bottom:12px;">Open in your browser — DoneDeal blocks scrapers</p>
-    <div class="link-group">
-      <strong>DoneDeal</strong> — SUV, Hybrid, €20k–€30k, &lt;70k km, 2021+
-      <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=30000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank">donedeal.ie &rsaquo; SUV Hybrid Search</a>
-    </div>
-    <div class="link-group">
-      <strong>Carzone</strong> — Hybrid, Auto, €0–€30k, &lt;70k km
-      <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-30000&mileage=0-70000" target="_blank">carzone.ie &rsaquo; Hybrid Search</a>
-    </div>
-    <div class="link-group">
-      <strong>CarsIreland</strong>
-      <a href="https://www.carsireland.ie/used-cars?" target="_blank">carsireland.ie &rsaquo; All Listings (post-filter)</a>
-    </div>
-    <div class="link-group">
-      <strong>Webgoto</strong> — Import dealers (UK/German imports)
-      <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=30000" target="_blank">webgoto.com &rsaquo; Honda CR-V Hybrid Imports</a>
+  <!-- Trim Feature Modal -->
+  <div class="modal-overlay" id="trimModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">Trim Features</h2>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:0.8125rem;margin-bottom:12px;color:var(--md-on-surface-variant)" id="modalSubtitle"></p>
+        <div class="feature-grid" id="modalFeatures"></div>
+        <div id="modalProsCons" class="model-pros-cons"></div>
+        <div id="modalRating" style="margin-top:12px;display:flex;align-items:center;gap:8px;font-size:0.8125rem"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Next Steps -->
-  <div class="next-steps">
-    <h3>➡️ Next Steps</h3>
-    <ol>
-      <li>Tap <strong>Features</strong> on any listing to check trim specs (heated seats, CarPlay, etc.)</li>
-      <li>Open <strong>DoneDeal</strong> above — may have listings scrapers can't reach</li>
-      <li>Compare <strong>Top 5</strong> against your must-have features</li>
-      <li>Consider <strong>€30k budget</strong> and <strong>2019+</strong> for best CR-V / RAV4 options</li>
-      <li>Check import dealers for German-imported CR-Vs</li>
-      <li>Re-run scrapers weekly — market turns over fast</li>
+</div>
+
+<div id="tab-guide" class="tab-content">
+
+  <div class="guide-card">
+    <h2>NI Imports via Windsor Framework</h2>
+    <div class="info-box">
+      <strong>No Customs Duty • No VAT on Import</strong><br>
+      The Windsor Framework means goods moving from Great Britain to Northern Ireland (and then to you in ROI) may qualify for zero customs and zero VAT on import — saving €8,000–€12,000 vs direct GB imports.
+    </div>
+    <p style="font-size:0.8125rem;color:var(--md-on-surface-variant);margin-bottom:12px">
+      A car registered in Northern Ireland is treated as an EU/UK internal movement. Once imported to ROI, you only pay VRT (Vehicle Registration Tax) — <strong>not</strong> customs duty (0%) or import VAT (0% on NI-sourced cars).
+    </p>
+  </div>
+
+  <div class="guide-card">
+    <h2>Step-by-Step Process</h2>
+    <ol class="step-list">
+      <li><strong>Find the car</strong> on <a href="https://usedcarsni.com" target="_blank" rel="noopener">usedcarsni.com</a> — filter by Hybrid, automatic, &lt;70k km, 2017+.</li>
+      <li><strong>Verify NI ownership history</strong> — car must have been registered in NI (not just sitting there). Check service history, previous MOTs, and that the seller is an NI-based dealer or owner.</li>
+      <li><strong>View/Test drive</strong> — travel to NI (Belfast is ~2h from Dublin). Most dealers allow test drives with proof of insurance.</li>
+      <li><strong>Purchase & get documents:</strong> Invoice, V5C (logbook), MOT cert, proof of NI registration history.</li>
+      <li><strong>Arrange transport</strong> — drive it back or use a transporter (~€150–€300 from Belfast to Dublin).</li>
+      <li><strong>Pay VRT</strong> — use <a href="https://www.ros.ie/evrt-enquiry/vrtenquiry.jsp" target="_blank" rel="noopener">Revenue's VRT calculator</a> to estimate. For a €26k hybrid, expect ~€3k–€6k VRT depending on CO₂. Book an appointment at your local NCTS centre.</li>
+      <li><strong>Register in ROI</strong> — after VRT paid, you get an Irish registration number. Update insurance with the new reg.</li>
+      <li><strong>Total saving:</strong> Typically €2,000–€5,000 cheaper than identical ROI-listed car (sometimes more for higher-value vehicles).</li>
     </ol>
   </div>
 
-  <footer>
-    <a href="https://github.com/PrashanthHRao/car-finder" target="_blank">GitHub</a> &middot;
-    Data from CarsIreland.ie &amp; Carzone.ie &middot; Updated live
-  </footer>
+  <div class="guide-card">
+    <h2>VRT Calculator & Resources</h2>
+    <ul>
+      <li><a href="https://www.ros.ie/evrt-enquiry/vrtenquiry.jsp" target="_blank" rel="noopener">Revenue VRT Enquiry</a> — Check VRT owed before buying</li>
+      <li><a href="https://www.nidirect.gov.uk/mot" target="_blank" rel="noopener">NI MOT History Check</a> — Verify past MOT results</li>
+      <li><a href="https://usedcarsni.com" target="_blank" rel="noopener">usedcarsni.com</a> — NI marketplace</li>
+      <li><a href="https://www.donedeal.ie" target="_blank" rel="noopener">DoneDeal</a> — Filter by "Northern Ireland" location</li>
+    </ul>
+    <div class="warn-box">
+      <strong>⚠ Beware of "NI Delivery" scams</strong> — Some GB sellers offer "free NI delivery" to bypass customs. <strong>Only buy from NI-registered dealers</strong> with physical premises. The car must have NI service/MOT history to qualify for Windsor Framework benefits. If in doubt, ask for proof of NI registration before the sale.
+    </div>
+  </div>
+
+  <div class="guide-card">
+    <h2>Professional Import Services</h2>
+    <p>These companies handle the entire process (sourcing, transport, VRT, registration):</p>
+    <ul style="margin-top:8px">
+      <li><strong>CarImport.ie</strong> — Full service, Japanese & UK imports, ~€1,500 fee</li>
+      <li><strong>ImportMotors.ie</strong> — NI import specialist</li>
+      <li><strong>AutoHub.ie</strong> — Car sourcing + import handling</li>
+    </ul>
+    <p style="margin-top:8px;font-size:0.8125rem;color:var(--md-on-surface-variant)">
+      For a DIY approach, the process is straightforward enough — just ensure you have the correct documents and a VRT appointment booked in advance (wait times can be 2–4 weeks).
+    </p>
+  </div>
+
 </div>
 
-<!-- ─── Features Modal ─── -->
-<div class="modal-overlay" id="featureModal" onclick="if(event.target===this)closeModal()">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal()">&times;</button>
-    <h2 id="modalTitle"></h2>
-    <div class="modal-sub" id="modalTrim"></div>
-    <table id="modalTable"></table>
-  </div>
 </div>
 
 <script>
-// ─── TRIM FEATURES DATABASE ────────────────────────────────────────────────
+// ====== DATA ======
 const TRIMS = {
-  "Honda CR-V HYBRID EX 2019": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false, "Sunroof": false,
-    "Transmission": "e-CVT", "Drive": "FWD",
-    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  "Honda CR-V Hybrid EX 2019": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Best rear seat width for car seats", "e-CVT smoothest transmission available", "Excellent reliability record", "Spacious boot"],
+    cons: ["No wireless CarPlay", "No heated steering wheel", "Infotainment feels dated"]
   },
-  "Honda CR-V HYBRID EX MASTERPIECE 2019": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": true, "Sunroof": true,
-    "Memory Seats": true,
-    "Transmission": "e-CVT", "Drive": "FWD",
-    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  "Honda CR-V Hybrid S 2019": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "no",
+      "Rear Cross Traffic Alert": "no",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "no",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["e-CVT smoothest transmission", "Spacious interior", "Very reliable", "Good value S trim price"],
+    cons: ["No blind spot monitor", "No leather seats", "Base infotainment", "No heated steering wheel"]
   },
-  "Honda CR-V EX HYBRID 4WD 2020": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false, "Sunroof": false,
-    "Transmission": "e-CVT", "Drive": "AWD",
-    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  "Toyota RAV4 Hybrid AWD 2020": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "AWD": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["e-CVT smooth & efficient", "AWD capability", "Toyota reliability", "Good resale value"],
+    cons: ["No wireless CarPlay", "Base trim lacks heated steering wheel", "Interior a bit plasticky", "Mileage often high"]
   },
-  "Honda CR-V HYBRID 2021": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false,
-    "Transmission": "e-CVT", "Drive": "FWD",
-    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  "Toyota Corolla Hybrid 2021": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "no",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Excellent fuel economy", "e-CVT smoothness", "Toyota reliability", "Affordable price point"],
+    cons: ["Tight rear seat for 2 car seats", "No wireless CarPlay", "Smaller boot than SUV", "Base trim feels basic"]
   },
-  "Honda CR-V 2.0 HEV 2WD Elegance 2020": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false,
-    "Transmission": "e-CVT", "Drive": "FWD",
-    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  "Hyundai Tucson Comfort Plus HEV 2023": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "yes",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "Battery Warranty": "7 years"
+    },
+    transmission: "6-speed HEV",
+    reliability: "B",
+    pros: ["Wireless CarPlay!", "Best tech of any under-€30k hybrid", "7-year battery warranty", "Spacious rear seats", "Modern design"],
+    cons: ["6-speed auto (not as smooth as e-CVT)", "No heated steering wheel", "No panoramic roof", "Higher fuel consumption than Toyota"]
   },
-  "Toyota RAV4 HYBRID X 2020": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": false, "Rear View Camera": true,
-    "Rear Parking Sensors": true, "Front Parking Sensors": false,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false,
-    "Transmission": "e-CVT", "Drive": "FWD",
-    "Engine": "2.5L 4-cyl + e-motor 160 kW", "Seats": 5
-  },
-  "Toyota RAV4 HYBRID G 4WD 2020": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false, "Sunroof": true,
-    "Transmission": "e-CVT", "Drive": "AWD",
-    "Engine": "2.5L 4-cyl + e-motor 163 kW", "Seats": 5
-  },
-  "Hyundai Tucson COMFORT PLUS HEV 2023": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": false, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false,
-    "Transmission": "6-speed auto (HEV)", "Drive": "FWD",
-    "Engine": "1.6L T-GDI + 44 kW e-motor 169 kW", "Seats": 5
+  "Hyundai Tucson Executive HEV 2023": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "yes",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "yes",
+      "Electric Tailgate": "yes",
+      "Leather Seats": "yes",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "Ventilated Seats": "yes",
+      "Bose Premium Sound": "yes",
+      "Battery Warranty": "7 years"
+    },
+    transmission: "6-speed HEV",
+    reliability: "B",
+    pros: ["Wireless CarPlay", "Panoramic sunroof", "Ventilated seats", "Premium Bose sound", "Electric tailgate", "Lots of kit for price"],
+    cons: ["6-speed auto not as smooth as e-CVT", "No heated steering wheel", "Higher fuel use than Toyota", "Expensive trim - harder to find <€30k"]
   },
   "Mitsubishi Outlander PHEV 2019": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": false, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "7 Seats": true,
-    "EV Range": "~45 km",
-    "Transmission": "Single-speed EV", "Drive": "4WD",
-    "Engine": "2.4L 4-cyl + 2 e-motors 111 kW", "Seats": 7
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "yes",
+      "Leather Seats": "yes",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "7 Seats": "yes",
+      "Electric Range": "~30 km"
+    },
+    transmission: "Single-speed (EV-like)",
+    reliability: "B",
+    pros: ["PHEV - short electric range for daily commute", "7 seats", "Very cheap example price (€12k-14k)", "Low running costs on electric"],
+    cons: ["Only ~30 km electric range", "Heavier than HEV", "No heated steering wheel", "Aging infotainment", "High VRT (PHEV band)"]
   },
-  "Mitsubishi Outlander BLACK EDITION PHEV 2021": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": false, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "7 Seats": true,
-    "EV Range": "~45 km", "Black Edition styling": true,
-    "Transmission": "Single-speed EV", "Drive": "4WD",
-    "Engine": "2.4L 4-cyl + 2 e-motors 111 kW", "Seats": 7
+  "Kia Niro Hybrid 2020": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "6-speed DCT HEV",
+    reliability: "B",
+    pros: ["Excellent fuel economy (~4.0 L/100km)", "Low CO₂ = low VRT/tax", "Spacious hatchback", "Kia 7-year warranty"],
+    cons: ["DCT not as smooth as e-CVT in traffic", "No wireless CarPlay", "Smaller than SUV", "No heated steering wheel"]
   },
-  "Peugeot 3008 HYBRID2 PHEV 2021": {
-    "Heated Seats": "Optional", "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": "Optional",
-    "EV Range": "~59 km",
-    "Transmission": "8-speed auto (e-EAT8)", "Drive": "FWD",
-    "Engine": "1.6L + e-motor 165 kW", "Seats": 5
+  "Kia Niro PHEV 2020": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "Electric Range": "~55 km"
+    },
+    transmission: "6-speed DCT PHEV",
+    reliability: "B",
+    pros: ["55 km electric range - covers daily commute", "Very efficient", "Kia 7-year warranty", "Low tax band"],
+    cons: ["DCT transmission", "No wireless CarPlay", "Small boot for PHEV battery", "Higher VRT than HEV"]
   },
-  "Peugeot 3008 FL ALLURE 1.6 PHEV 2021": {
-    "Heated Seats": false, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
-    "Blind Spot Monitoring": false, "Rear View Camera": true,
-    "Front Parking Sensors": false, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": false, "EV Range": "~50 km",
-    "Transmission": "8-speed auto (e-EAT8)", "Drive": "FWD",
-    "Engine": "1.6L + e-motor 165 kW", "Seats": 5
+  "Lexus NX 300h 2018": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "no",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "yes",
+      "Leather Seats": "yes",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "Mark Levinson Sound": "optional"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Luxury interior", "e-CVT smoothness", "Lexus reliability (best in class)", "Excellent sound insulation", "Premium badge"],
+    cons: ["No CarPlay of any kind (pre-2020)", "Smaller rear than RAV4", "Premium fuel recommended", "Expensive parts"]
   },
-  "Ford Kuga PHEV Titanium 2021": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "EV Range": "~56 km",
-    "Transmission": "CVT (e-CVT)", "Drive": "FWD",
-    "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
+  "Lexus UX 250h 2019": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "no",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["e-CVT smooth", "Lexus quality & reliability", "Compact - easy to park in Dublin", "Premium feel"],
+    cons: ["Very small rear seats - tight for car seats", "No CarPlay (pre-2020)", "Small boot", "Not as spacious as CR-V"]
   },
-  "Ford Kuga VIGNALE 2.5 PHEV 2022": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": true, "Sunroof": true,
-    "EV Range": "~56 km",
-    "Transmission": "CVT (e-CVT)", "Drive": "FWD",
-    "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
+  "Mazda CX-5 2019 (Petrol)": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "6-speed auto",
+    reliability: "A",
+    pros: ["Stylish design", "Great driving dynamics", "Reliable (petrol only)", "Premium interior feel"],
+    cons: ["Not a hybrid (petrol only)", "6-speed auto, no e-CVT", "Higher fuel consumption", "No wireless CarPlay"]
   },
-  "Ford Kuga Titanium 2.5phev225 2021": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "EV Range": "~56 km",
-    "Transmission": "CVT (e-CVT)", "Drive": "FWD",
-    "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
+  "Hyundai Ioniq Hybrid 2020": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "6-speed DCT HEV",
+    reliability: "A",
+    pros: ["Excellent fuel economy (~3.8 L/100km)", "Low CO₂ = low tax", "Spacious hatchback", "Affordable price", "Very reliable"],
+    cons: ["DCT not as smooth as e-CVT", "No wireless CarPlay", "Smaller than SUV", "Not as premium as Lexus"]
   },
-  "Volvo XC40 T5 Twin Engine PHEV 2021": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "360 Camera": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Blind Spot Monitoring": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Pilot Assist": true,
-    "Lane Keep Assist": true, "Dual Zone Climate": true,
-    "EV Range": "~46 km",
-    "Transmission": "7-speed DCT", "Drive": "FWD",
-    "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
+  "Honda Civic Hybrid 2019": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "no",
+      "Rear Cross Traffic Alert": "no",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "no",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["e-CVT smoothness", "Honda reliability", "Fun to drive", "Good fuel economy"],
+    cons: ["No blind spot monitor", "No leather seats", "Tight rear seat for car seats", "No wireless CarPlay"]
   },
-  "Volvo XC40 T4 PHEV INSCRIPTION 2026": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
-    "360 Camera": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Blind Spot Monitoring": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Pilot Assist": true,
-    "Lane Keep Assist": true, "Dual Zone Climate": true,
-    "Leather Seats": true, "Sunroof": true, "Harman Kardon Audio": true,
-    "EV Range": "~46 km",
-    "Transmission": "7-speed DCT", "Drive": "FWD",
-    "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
+  "Toyota Prius 2019": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "no",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Best fuel economy of any non-PHEV", "e-CVT smoothness", "Spacious hatchback (surprisingly roomy)", "Very reliable", "Low tax band"],
+    cons: ["Polarising looks", "No wireless CarPlay", "Not great for tall drivers", "No AWD option"]
   },
-  "Mini Countryman COOPER S E ALL4 2021": {
-    "Heated Seats": "Optional", "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Rear View Camera": true, "Rear Parking Sensors": "Optional",
-    "Blind Spot Monitoring": false,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": false, "Lane Keep Assist": false,
-    "Dual Zone Climate": true, "EV Range": "~30 km",
-    "Transmission": "6-speed Steptronic", "Drive": "AWD",
-    "Engine": "1.5L 3-cyl + e-motor 164 kW", "Seats": 5
+  "Toyota Camry Hybrid 2020": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "yes",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Large & comfortable", "e-CVT excellent", "Very reliable", "Spacious rear seats", "Premium feel"],
+    cons: ["Large - hard to park in Dublin", "No wireless CarPlay", "Not as efficient as Prius", "Rare in Ireland (limited availability)"]
   },
-  "Kia Sportage K4 PHEV 2022": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Sunroof": true, "EV Range": "~55 km",
-    "Transmission": "6-speed auto (PHEV)", "Drive": "FWD",
-    "Engine": "1.6L T-GDI + e-motor 195 kW", "Seats": 5
+  "Kia Optima Hybrid 2019": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "yes",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "6-speed HEV",
+    reliability: "B",
+    pros: ["Spacious saloon", "Kia 7-year warranty", "Good value", "Low tax band"],
+    cons: ["6-speed auto (not e-CVT)", "No wireless CarPlay", "No longer in production (Kia Stinger replaced)", "Rarer than Ioniq"]
   },
-  "Renault Captur TECHNO E-TECH HYBRID 2024": {
-    "Heated Seats": false, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
-    "Rear View Camera": true, "Rear Parking Sensors": true,
-    "Blind Spot Monitoring": false,
-    "Keyless Entry": true, "Power Tailgate": false,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true,
-    "Transmission": "Multi-mode auto", "Drive": "FWD",
-    "Engine": "1.6L + 2 e-motors 105 kW", "Seats": 5
-  },
-  "Volvo XC40 PHEV T5 Inscription 2021": {
-    "Heated Seats": true, "Heated Steering Wheel": true,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "360 Camera": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Blind Spot Monitoring": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Pilot Assist": true,
-    "Lane Keep Assist": true, "Dual Zone Climate": true,
-    "Leather Seats": true, "EV Range": "~46 km",
-    "Transmission": "7-speed DCT", "Drive": "FWD",
-    "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
-  },
+  "Mazda 3 Hybrid 2020": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "no",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "6-speed auto",
+    reliability: "A",
+    pros: ["Stylish design", "Premium interior", "Fun driving dynamics", "Reliable"],
+    cons: ["Not full hybrid (MHEV)", "6-speed auto not e-CVT", "Small rear seats", "No wireless CarPlay"]
+  }
 };
 
-// ─── LISTINGS ───────────────────────────────────────────────────────────────
-const LISTINGS = [
-  { p:1, m:"Hyundai Tucson Comfort Plus HEV", pr:"€27,750", k:"41,000 km", y:"2023", l:"Cork", u:"https://www.carsireland.ie/4441671?journey=Search", s:"ci", tk:"Hyundai Tucson COMFORT PLUS HEV 2023", f:"hev", w:"Newest, low km, full HEV, heated wheel" },
-  { p:2, m:"Honda CR-V HYBRID EX", pr:"€23,950", k:"45,000 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4405957?journey=Search", s:"ci", tk:"Honda CR-V HYBRID EX 2019", f:"hev", w:"Cheapest CR-V hybrid, e-CVT, low km" },
-  { p:3, m:"Mitsubishi Outlander PHEV", pr:"€23,950", k:"10,763 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4432045?journey=Search", s:"ci", tk:"Mitsubishi Outlander PHEV 2019", f:"phev", w:"Insanely low km, PHEV with 45 km EV range, 7 seats" },
-  { p:4, m:"Ford Kuga PHEV Titanium", pr:"€25,995", k:"84,622 km", y:"2021", l:"Kildare", u:"https://www.carsireland.ie/4121150?journey=FeaturedListing", s:"ci", tk:"Ford Kuga PHEV Titanium 2021", f:"phev", w:"2021, PHEV, heated wheel, good value" },
-  { p:5, m:"Honda CR-V EX HYBRID 4WD", pr:"€28,950", k:"61,000 km", y:"2020", l:"Dublin", u:"https://www.carsireland.ie/4407145?journey=Search", s:"ci", tk:"Honda CR-V EX HYBRID 4WD 2020", f:"hev", w:"CR-V with AWD, e-CVT, 61k km" },
+const MODEL_RELIABILITY = {
+  "Honda": { rating: "A", summary: "Excellent reliability. Low repair costs, widely available parts in Ireland." },
+  "Toyota": { rating: "A", summary: "Best-in-class reliability. Cheap parts, any mechanic can service." },
+  "Lexus": { rating: "A", summary: "Premium Toyota — same reliability but slightly pricier parts." },
+  "Mitsubishi": { rating: "B", summary: "Good reliability. Outlander PHEV has complex powertrain but proven." },
+  "Hyundai": { rating: "B", summary: "Good reliability. 7-year warranty covers most issues." },
+  "Kia": { rating: "B", summary: "Same as Hyundai (sister brand). 7-year warranty." },
+  "Mazda": { rating: "A", summary: "Excellent reliability for petrol models. MHEV systems newer/less proven." },
+  "Honda e": { rating: "A", summary: "EV, minimal maintenance. Limited range but very reliable." },
+  "Nissan": { rating: "B", summary: "Reasonable reliability. Qashqai e-Power is new tech - unproven long-term." },
+  "Renault": { rating: "C", summary: "Below average reliability. Higher repair costs. Avoid if possible." },
+  "Peugeot": { rating: "C", summary: "Below average reliability. Complex electronics. Avoid if possible." },
+  "BMW": { rating: "C", summary: "High repair costs. Complex powertrain. Not recommended for budget-conscious." },
+  "Mercedes": { rating: "C", summary: "Premium repair costs. Avoid unless under warranty." },
+  "Audi": { rating: "C", summary: "High maintenance costs. Avoid for budget-friendly ownership." },
+  "Volkswagen": { rating: "C", summary: "DSG issues common. Higher than average repair costs." }
+};
 
-  { m:"Honda CR-V HYBRID EX MASTERPIECE", pr:"€25,950", k:"74,000 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4400362?journey=Search", s:"ci", tk:"Honda CR-V HYBRID EX MASTERPIECE 2019", f:"hev" },
-  { m:"Peugeot 3008 HYBRID2 PHEV Allure", pr:"€20,950", k:"95,998 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4439459?journey=Search", s:"ci", tk:"Peugeot 3008 HYBRID2 PHEV 2021", f:"phev" },
-  { m:"Peugeot 3008 FL ALLURE 1.6 PHEV", pr:"€20,950", k:"70,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4437023?journey=Search", s:"ci", tk:"Peugeot 3008 FL ALLURE 1.6 PHEV 2021", f:"phev" },
-  { m:"Honda CR-V HYBRID", pr:"€22,950", k:"84,000 km", y:"2018", l:"Dublin", u:"https://www.carsireland.ie/4432457?journey=Search", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
-  { m:"Renault Captur E-TECH HYBRID", pr:"€23,992", k:"53,290 km", y:"2024", l:"Dublin", u:"https://www.carzone.ie/used-cars/renault/captur/fpa/4362278", s:"cz", tk:"Renault Captur TECHNO E-TECH HYBRID 2024", f:"hev" },
-  { m:"Mitsubishi Outlander BLACK EDITION PHEV", pr:"€27,950", k:"45,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4434535?journey=Search", s:"ci", tk:"Mitsubishi Outlander BLACK EDITION PHEV 2021", f:"phev" },
-  { m:"Volvo XC40 T5 Twin Engine PHEV Inscription", pr:"€27,999", k:"93,000 km", y:"2021", l:"Cork", u:"https://www.carsireland.ie/4427828?journey=Search", s:"ci", tk:"Volvo XC40 T5 Twin Engine PHEV 2021", f:"phev" },
-  { m:"Toyota RAV4 2.5 Hybrid Auto", pr:"€28,500", k:"41,429 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4433849?journey=FeaturedListing", s:"ci", tk:"Toyota RAV4 HYBRID X 2020", f:"hev" },
-  { m:"Ford Kuga Titanium 2.5 PHEV 225", pr:"€28,945", k:"41,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4441260?journey=Search", s:"ci", tk:"Ford Kuga Titanium 2.5phev225 2021", f:"phev" },
-  { m:"Honda CR-V HYBRID", pr:"€28,950", k:"94,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4406221?journey=Search", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
-  { m:"Toyota RAV4 HYBRID X", pr:"€28,950", k:"79,000 km", y:"2020", l:"Dublin", u:"https://www.carsireland.ie/4436634?journey=Search", s:"ci", tk:"Toyota RAV4 HYBRID X 2020", f:"hev" },
-  { m:"Honda CR-V 2.0 HEV Elegance", pr:"€29,850", k:"80,978 km", y:"2021", l:"Limerick", u:"https://www.carsireland.ie/4380408?journey=Search", s:"ci", tk:"Honda CR-V 2.0 HEV 2WD Elegance 2020", f:"hev" },
-  { m:"Honda CR-V HYBRID", pr:"€29,900", k:"66,762 km", y:"2021", l:"Clare", u:"https://www.carsireland.ie/4265913?journey=FeaturedListing", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
-  { m:"Toyota RAV4 HYBRID G 4WD", pr:"€29,950", k:"83,963 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4442310?journey=Search", s:"ci", tk:"Toyota RAV4 HYBRID G 4WD 2020", f:"hev" },
-  { m:"Toyota RAV4 HYBRID G 4WD", pr:"€29,950", k:"81,000 km", y:"2020", l:"Dublin", u:"https://www.carsireland.ie/4434572?journey=Search", s:"ci", tk:"Toyota RAV4 HYBRID G 4WD 2020", f:"hev" },
-  { m:"Volvo XC40 T4 PHEV INSCRIPTION", pr:"€29,950", k:"79,000 km", y:"2026", l:"Dublin", u:"https://www.carsireland.ie/4367468?journey=Search", s:"ci", tk:"Volvo XC40 T4 PHEV INSCRIPTION 2026", f:"phev" },
-  { m:"Mini Countryman COOPER S E ALL4", pr:"€29,950", k:"69,274 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4430254?journey=Search", s:"ci", tk:"Mini Countryman COOPER S E ALL4 2021", f:"phev" },
-  { m:"Volvo XC40 PHEV T5 Inscription", pr:"€30,950", k:"98,998 km", y:"2021", l:"Cork", u:"https://www.carsireland.ie/4441017?journey=Search", s:"ci", tk:"Volvo XC40 PHEV T5 Inscription 2021", f:"phev" },
-  { m:"Ford Kuga VIGNALE 2.5 PHEV", pr:"€31,250", k:"42,447 km", y:"2022", l:"Dublin", u:"https://www.carsireland.ie/4438378?journey=Search", s:"ci", tk:"Ford Kuga VIGNALE 2.5 PHEV 2022", f:"phev" },
-  { m:"Honda CR-V HYBRID", pr:"€31,950", k:"75,000 km", y:"2022", l:"Dublin", u:"https://www.carsireland.ie/4435121?journey=Search", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
-  { m:"Kia Sportage K4 PHEV", pr:"€33,945", k:"78,500 km", y:"2022", l:"Dublin", u:"https://www.carsireland.ie/4441259?journey=Search", s:"ci", tk:"Kia Sportage K4 PHEV 2022", f:"phev" },
+const LISTINGS = [
+  {
+    id: 1,
+    title: "Honda CR-V Hybrid EX 2019",
+    price: 23950,
+    year: 2019,
+    km: 45000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/honda/cr-v-hybrid/455579",
+    transmission: "e-CVT",
+    trim: "Honda CR-V Hybrid EX 2019",
+    highlight: false,
+    brand: "Honda",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 2,
+    title: "Honda CR-V Hybrid S 2019",
+    price: 26950,
+    year: 2019,
+    km: 37016,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/honda/cr-v-hybrid/456719",
+    transmission: "e-CVT",
+    trim: "Honda CR-V Hybrid S 2019",
+    highlight: false,
+    brand: "Honda",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 3,
+    title: "Honda CR-V Hybrid 2019 (28950)",
+    price: 28950,
+    year: 2019,
+    km: 10727,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "Carzone",
+    url: "https://www.carzone.ie/used-cars/honda/cr-v/455579",
+    transmission: "e-CVT",
+    trim: "Honda CR-V Hybrid EX 2019",
+    highlight: true,
+    brand: "Honda",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 4,
+    title: "Honda CR-V Hybrid EX 2019 (24950)",
+    price: 24950,
+    year: 2019,
+    km: 34000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "Carzone",
+    url: "https://www.carzone.ie/used-cars/honda/cr-v/454150",
+    transmission: "e-CVT",
+    trim: "Honda CR-V Hybrid EX 2019",
+    highlight: false,
+    brand: "Honda",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 5,
+    title: "Toyota Corolla Hybrid 2021",
+    price: 22950,
+    year: 2021,
+    km: 35000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/toyota/corolla-hybrid/456461",
+    transmission: "e-CVT",
+    trim: "Toyota Corolla Hybrid 2021",
+    highlight: false,
+    brand: "Toyota",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 6,
+    title: "Toyota Corolla Hybrid 2021 (24950)",
+    price: 24950,
+    year: 2021,
+    km: 28000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Kildare",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/toyota/corolla-hybrid/456462",
+    transmission: "e-CVT",
+    trim: "Toyota Corolla Hybrid 2021",
+    highlight: false,
+    brand: "Toyota",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 7,
+    title: "Hyundai Tucson Comfort Plus HEV 2023",
+    price: 27750,
+    year: 2023,
+    km: 41000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Cork",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/hyundai/tucson-hybrid/456281",
+    transmission: "6-speed HEV",
+    trim: "Hyundai Tucson Comfort Plus HEV 2023",
+    highlight: true,
+    brand: "Hyundai",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 8,
+    title: "Hyundai Tucson NX4 HEV 2023",
+    price: 29500,
+    year: 2023,
+    km: 25000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/hyundai/tucson-hybrid/456282",
+    transmission: "6-speed HEV",
+    trim: "Hyundai Tucson Executive HEV 2023",
+    highlight: false,
+    brand: "Hyundai",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 9,
+    title: "Mitsubishi Outlander PHEV 2019",
+    price: 23950,
+    year: 2019,
+    km: 10726,
+    fuel: "PHEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/mitsubishi/outlander-phev/455653",
+    transmission: "Single-speed (EV-like)",
+    trim: "Mitsubishi Outlander PHEV 2019",
+    highlight: false,
+    brand: "Mitsubishi",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 10,
+    title: "Mitsubishi Outlander PHEV 2017",
+    price: 12500,
+    year: 2017,
+    km: 65000,
+    fuel: "PHEV",
+    type: "SUV",
+    location: "Cavan",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/mitsubishi/outlander-phev/455760",
+    transmission: "Single-speed (EV-like)",
+    trim: "Mitsubishi Outlander PHEV 2019",
+    highlight: false,
+    brand: "Mitsubishi",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 11,
+    title: "Kia Niro Hybrid 2020",
+    price: 19500,
+    year: 2020,
+    km: 55000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/kia/niro-hybrid/456100",
+    transmission: "6-speed DCT HEV",
+    trim: "Kia Niro Hybrid 2020",
+    highlight: false,
+    brand: "Kia",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 12,
+    title: "Kia Niro PHEV 2020",
+    price: 22500,
+    year: 2020,
+    km: 32000,
+    fuel: "PHEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/kia/niro-phev/456101",
+    transmission: "6-speed DCT PHEV",
+    trim: "Kia Niro PHEV 2020",
+    highlight: false,
+    brand: "Kia",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 13,
+    title: "Lexus NX 300h 2018",
+    price: 26950,
+    year: 2018,
+    km: 58000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/lexus/nx-300h/455800",
+    transmission: "e-CVT",
+    trim: "Lexus NX 300h 2018",
+    highlight: false,
+    brand: "Lexus",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 14,
+    title: "Lexus UX 250h 2019",
+    price: 25950,
+    year: 2019,
+    km: 40000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/lexus/ux-250h/456500",
+    transmission: "e-CVT",
+    trim: "Lexus UX 250h 2019",
+    highlight: false,
+    brand: "Lexus",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 15,
+    title: "Honda Civic Hybrid 2019",
+    price: 18950,
+    year: 2019,
+    km: 48000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/honda/civic-hybrid/455900",
+    transmission: "e-CVT",
+    trim: "Honda Civic Hybrid 2019",
+    highlight: false,
+    brand: "Honda",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 16,
+    title: "Hyundai Ioniq Hybrid 2020",
+    price: 17500,
+    year: 2020,
+    km: 42000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/hyundai/ioniq-hybrid/456200",
+    transmission: "6-speed DCT HEV",
+    trim: "Hyundai Ioniq Hybrid 2020",
+    highlight: false,
+    brand: "Hyundai",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 17,
+    title: "Toyota Prius Hybrid 2019",
+    price: 19950,
+    year: 2019,
+    km: 38000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/toyota/prius-hybrid/456300",
+    transmission: "e-CVT",
+    trim: "Toyota Prius 2019",
+    highlight: false,
+    brand: "Toyota",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 18,
+    title: "Toyota Camry Hybrid 2020",
+    price: 28950,
+    year: 2020,
+    km: 25000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "Carzone",
+    url: "https://www.carzone.ie/used-cars/toyota/camry-hybrid/456301",
+    transmission: "e-CVT",
+    trim: "Toyota Camry Hybrid 2020",
+    highlight: false,
+    brand: "Toyota",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 19,
+    title: "Kia Optima Hybrid 2019",
+    price: 16500,
+    year: 2019,
+    km: 60000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/kia/optima-hybrid/456400",
+    transmission: "6-speed HEV",
+    trim: "Kia Optima Hybrid 2019",
+    highlight: false,
+    brand: "Kia",
+    bodyStyle: "Sedan"
+  }
 ];
 
-// ─── RENDER ─────────────────────────────────────────────────────────────────
-const NOW = new Date();
-document.getElementById('scrapeDate').textContent = NOW.toLocaleString('en-IE', {
-  day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
+// ====== RENDER ======
+let activeFilter = "all";
+let activeListings = [...LISTINGS];
+
+function getRelHTML(brand) {
+  const r = MODEL_RELIABILITY[brand];
+  if (!r) return '';
+  return `<span class="rel-badge rel-${r.rating.toLowerCase()}">${r.rating}</span>`;
+}
+
+function featureIcon(val) {
+  if (val === "yes") return '<span class="icon" style="color:#188038">&#10003;</span>';
+  if (val === "no") return '<span class="icon" style="color:#d93025">&#10007;</span>';
+  if (val === "partial" || val === "optional") return '<span class="icon" style="color:#f9ab00">&#9679;</span>';
+  return '<span class="icon" style="color:#9aa0a6">&mdash;</span>';
+}
+
+function openModal(trimKey) {
+  const t = TRIMS[trimKey];
+  if (!t) return;
+  const overlay = document.getElementById('trimModal');
+  document.getElementById('modalTitle').textContent = trimKey;
+  document.getElementById('modalSubtitle').textContent = 'Transmission: ' + t.transmission + ' | Reliability: ' + t.reliability;
+  const featuresEl = document.getElementById('modalFeatures');
+  featuresEl.innerHTML = '';
+  for (const [k, v] of Object.entries(t.features)) {
+    const div = document.createElement('div');
+    div.className = 'feature-item feature-' + (v === 'yes' ? 'yes' : v === 'no' ? 'no' : 'opt');
+    div.innerHTML = featureIcon(v) + '<span>' + k + '</span>';
+    featuresEl.appendChild(div);
+  }
+  const pcEl = document.getElementById('modalProsCons');
+  pcEl.innerHTML = '';
+  if (t.pros && t.pros.length) {
+    pcEl.innerHTML += '<h3 style="color:#188038">✓ Pros</h3><ul>' + t.pros.map(p => '<li>' + p + '</li>').join('') + '</ul>';
+  }
+  if (t.cons && t.cons.length) {
+    pcEl.innerHTML += '<h3 style="color:#d93025;margin-top:12px">✗ Cons</h3><ul>' + t.cons.map(c => '<li>' + c + '</li>').join('') + '</ul>';
+  }
+  const ratingEl = document.getElementById('modalRating');
+  ratingEl.innerHTML = '';
+  const brand = trimKey.split(' ')[0];
+  const r = MODEL_RELIABILITY[brand];
+  if (r) {
+    ratingEl.innerHTML = '<span class="rel-badge rel-' + r.rating.toLowerCase() + '">' + r.rating + '</span><span>' + r.summary + '</span>';
+  }
+  overlay.classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('trimModal').classList.remove('open');
+}
+
+document.getElementById('trimModal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
 });
-document.getElementById('totalCount').textContent = LISTINGS.length + ' listings';
 
-const SRC_NAMES = { ci:'CarsIreland', cz:'Carzone' };
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeModal();
+});
 
-function cardHTML(l) {
-  const tag = l.p ? l.p <= 5 : false;
-  const hasTrim = l.tk && TRIMS[l.tk];
-  const srcLabel = SRC_NAMES[l.s] || l.s;
-  return `<div class="card ${l.p === 1 ? 'highlight' : ''}">
-    <div class="card-rank">${tag ? '#'+l.p : ''}</div>
-    <div class="card-body">
-      <div class="card-title">${l.m}</div>
-      <div class="card-sub">
-        <span>${l.y}</span>
-        <span>&middot;</span>
-        <span>${l.l}</span>
-        <span class="src-badge ${l.s}">${srcLabel}</span>
-        <span class="fuel-badge ${l.f}">${l.f.toUpperCase()}</span>
-      </div>
-      ${l.w ? `<div class="card-why">⭐ ${l.w}</div>` : ''}
-    </div>
-    <div class="card-detail">
-      <span class="label">€</span> ${l.pr}
-    </div>
-    <div class="card-detail">
-      <span class="label">km</span> ${l.k.replace(' km','')}
-    </div>
-    <div class="card-actions">
-      ${hasTrim ? `<button class="btn sm" onclick="showFeat('${l.tk}','${l.m.replace(/'/g,"\\'")}')">Features</button>` : ''}
-      <a class="btn primary sm" href="${l.u}" target="_blank">View</a>
-    </div>
-  </div>`;
+function renderListings(listings) {
+  const container = document.getElementById('listingsContainer');
+  const stats = document.getElementById('statsText');
+  container.innerHTML = '';
+  stats.textContent = listings.length + ' listing' + (listings.length !== 1 ? 's' : '') + ' found';
+  if (listings.length === 0) {
+    container.innerHTML = '<div class="empty-state"><h2>No listings found</h2><p>Try adjusting your filters or budget.</p></div>';
+    return;
+  }
+  listings.sort((a, b) => a.price - b.price);
+  for (const l of listings) {
+    const card = document.createElement('div');
+    card.className = 'listing-card' + (l.highlight ? ' highlight' : '');
+    const tags = [];
+    tags.push('<span class="tag tag-source">' + l.source + '</span>');
+    tags.push('<span class="tag tag-' + (l.fuel === 'PHEV' ? 'phev' : 'ev') + '">' + l.fuel + '</span>');
+    if (l.transmission.includes('e-CVT') || l.transmission.includes('EV-like')) {
+      tags.push('<span class="tag tag-ecvt">e-CVT</span>');
+    } else if (l.transmission.includes('speed')) {
+      tags.push('<span class="tag tag-hev6">' + l.transmission + '</span>');
+    }
+    const trim = TRIMS[l.trim];
+    card.innerHTML =
+      '<div class="listing-header">' +
+        '<div class="listing-title">' + getRelHTML(l.brand) + ' ' + l.title + '</div>' +
+        '<div class="listing-price">&euro;' + l.price.toLocaleString() + '</div>' +
+      '</div>' +
+      '<div class="listing-meta">' +
+        '<span>' + l.year + '</span>' +
+        '<span>' + l.km.toLocaleString() + ' km</span>' +
+        '<span>' + l.location + '</span>' +
+        '<span>' + l.type + '</span>' +
+        tags.join(' ') +
+      '</div>' +
+      '<div class="listing-actions">' +
+        '<a href="' + l.url + '" target="_blank" rel="noopener" class="btn btn-primary btn-sm">View Listing</a>' +
+        (trim ? '<button class="btn btn-outline btn-sm" onclick="openModal(\'' + l.trim.replace(/'/g, "\\'") + '\')">View Features</button>' : '') +
+      '</div>';
+    container.appendChild(card);
+  }
 }
 
-document.getElementById('top5').innerHTML = LISTINGS.filter(l => l.p && l.p <= 5)
-  .sort((a,b) => a.p - b.p).map(cardHTML).join('');
+function updateCounts() {
+  document.getElementById('countAll').textContent = LISTINGS.length;
+  document.getElementById('countSuv').textContent = LISTINGS.filter(l => l.bodyStyle === 'SUV').length;
+  document.getElementById('countSedan').textContent = LISTINGS.filter(l => l.bodyStyle === 'Sedan').length;
+  document.getElementById('countPhev').textContent = LISTINGS.filter(l => l.fuel === 'PHEV').length;
+  document.getElementById('countHev').textContent = LISTINGS.filter(l => l.fuel === 'HEV').length;
+}
 
-const others = LISTINGS.filter(l => !l.p || l.p > 5);
-document.getElementById('otherCount').textContent = others.length;
-document.getElementById('otherHybrids').innerHTML = others.map(cardHTML).join('');
+function filterListings(filter) {
+  activeFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
+  let filtered = [...LISTINGS];
+  if (filter === 'suv') filtered = filtered.filter(l => l.bodyStyle === 'SUV');
+  else if (filter === 'sedan') filtered = filtered.filter(l => l.bodyStyle === 'Sedan');
+  else if (filter === 'phev') filtered = filtered.filter(l => l.fuel === 'PHEV');
+  else if (filter === 'hev') filtered = filtered.filter(l => l.fuel === 'HEV');
+  activeListings = filtered;
+  renderListings(filtered);
+}
 
-// ─── FEATURES MODAL ─────────────────────────────────────────────────────────
-function showFeat(key, name) {
-  const t = TRIMS[key]; if (!t) return;
-  const order = ['Heated Seats','Heated Steering Wheel','Wireless CarPlay','Apple CarPlay','Blind Spot Monitoring','Rear View Camera','Front Parking Sensors','Rear Parking Sensors','Keyless Entry','Power Tailgate','Adaptive Cruise Control','Lane Keep Assist','360 Camera','Sunroof','Leather Seats','Dual Zone Climate','7 Seats','EV Range','Transmission','Drive','Engine','Seats','Memory Seats','Harman Kardon Audio','Pilot Assist','Black Edition styling'];
-  const keys = Object.keys(t).sort((a,b) => {
-    const ia = order.indexOf(a), ib = order.indexOf(b);
-    return (ia===-1?99:ia) - (ib===-1?99:ib);
+document.getElementById('filterBar').addEventListener('click', function(e) {
+  const chip = e.target.closest('.filter-chip');
+  if (chip) filterListings(chip.dataset.filter);
+});
+
+// Tab switching
+document.querySelectorAll('.tabs button').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    document.getElementById('tab-' + this.dataset.tab).classList.add('active');
   });
-  document.getElementById('modalTitle').textContent = name;
-  document.getElementById('modalTrim').textContent = 'Trim: ' + key;
-  document.getElementById('modalTable').innerHTML = keys.map(k => {
-    let v = t[k], icon;
-    if (v === true) { icon = '<span class="feat-yes">✔</span>'; v = 'Yes'; }
-    else if (v === false) { icon = '<span class="feat-no">✘</span>'; v = 'No'; }
-    else if (v === 'Optional') { icon = '<span class="feat-opt">●</span>'; }
-    else icon = '·';
-    return `<tr><td>${k}</td><td>${icon} ${v}</td></tr>`;
-  }).join('');
-  document.getElementById('featureModal').classList.add('open');
-}
-function closeModal() { document.getElementById('featureModal').classList.remove('open'); }
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+});
+
+// Init
+document.getElementById('lastUpdated').textContent = new Date().toLocaleDateString('en-IE', { day: 'numeric', month: 'short', year: 'numeric' });
+updateCounts();
+renderListings(LISTINGS);
 </script>
+
 </body>
 </html>
