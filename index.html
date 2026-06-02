@@ -2,223 +2,323 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>Hybrid SUV Finder — Ireland</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #0f172a; --card: #1e293b; --border: #334155;
-      --text: #f1f5f9; --muted: #94a3b8;
-      --accent: #22c55e; --warn: #f59e0b; --danger: #ef4444;
-      --primary: #22d3ee;
-      --hybrid: #22c55e; --phev: #8b5cf6;
-    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem;
-    }
-    .container { max-width: 1100px; margin: 0 auto; }
-    a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
-    a:hover { color: #67e8f9; }
-
-    h1 { font-size: 2rem; margin-bottom: .25rem; }
-    h1 small { font-size: 1rem; color: var(--muted); font-weight: 400; }
-    .subtitle { color: var(--muted); margin-bottom: 2rem; }
-
-    .scrape-info {
-      display: flex; align-items: center; gap: .5rem;
-      color: var(--muted); font-size: .85rem; margin-bottom: 1.5rem;
-    }
-    .scrape-info .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
-    .scrape-info .dot.green { background: var(--accent); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
-
-    .filter-bar {
-      display: flex; flex-wrap: wrap; gap: .75rem;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;
-    }
-    .filter-bar .tag {
-      background: #1f3a4b; color: var(--primary);
-      padding: .35rem .85rem; border-radius: 20px;
-      font-size: .85rem; font-weight: 500;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f4f5f7; color: #1a1a2e;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
     }
 
-    h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
-    .badge {
-      font-size: .7rem; padding: .15rem .6rem; border-radius: 10px; color: #fff; font-weight: 600;
+    /* ─── App Bar ─── */
+    .appbar {
+      background: #fff; border-bottom: 1px solid #e8eaed;
+      padding: 0 16px; position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
     }
-    .badge.hybrid { background: var(--hybrid); }
-    .badge.phev { background: var(--phev); }
-    .badge.live { background: var(--accent); }
+    .appbar-inner {
+      max-width: 1000px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .appbar-title { font-size: 1.15rem; font-weight: 600; color: #1a1a2e; display: flex; align-items: center; gap: 8px; }
+    .appbar-title small { font-weight: 400; font-size: .8rem; color: #5f6368; }
+    .appbar-badge {
+      background: #e8f5e9; color: #2e7d32; font-size: .7rem; font-weight: 600;
+      padding: 3px 10px; border-radius: 12px; white-space: nowrap;
+    }
 
-    .source-badge {
-      display: inline-block; padding: .15rem .5rem; border-radius: 6px;
-      font-size: .7rem; font-weight: 600; color: #fff;
+    /* ─── Container ─── */
+    .container { max-width: 1000px; margin: 0 auto; padding: 16px; }
+
+    /* ─── Status Bar ─── */
+    .status-bar {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+      font-size: .8rem; color: #5f6368; margin-bottom: 16px;
+      background: #fff; border-radius: 12px; padding: 12px 16px;
+      box-shadow: 0 1px 2px rgba(0,0,0,.06);
     }
-    .source-badge.ci { background: #2563eb; }
-    .source-badge.cz { background: #dc2626; }
-    .source-badge.dd { background: #16a34a; }
+    .status-bar .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+    .status-bar .dot.green { background: #34a853; }
+
+    /* ─── Chips ─── */
+    .chips {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;
+    }
+    .chip {
+      background: #fff; border: 1px solid #dadce0; border-radius: 8px;
+      padding: 6px 14px; font-size: .78rem; font-weight: 500; color: #5f6368;
+      display: flex; align-items: center; gap: 5px;
+    }
+
+    /* ─── Section Headers ─── */
+    .section-title {
+      font-size: 1.1rem; font-weight: 600; color: #1a1a2e;
+      margin: 24px 0 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .section-count {
+      background: #e8eaed; border-radius: 10px; padding: 1px 10px;
+      font-size: .75rem; font-weight: 600; color: #5f6368;
+    }
+
+    /* ─── Source Badge ─── */
+    .src-badge {
+      display: inline-flex; align-items: center; gap: 3px;
+      font-size: .68rem; font-weight: 600; padding: 2px 8px;
+      border-radius: 6px; color: #fff;
+    }
+    .src-badge.ci { background: #1a73e8; }
+    .src-badge.cz { background: #e94235; }
 
     .fuel-badge {
-      display: inline-block; padding: .15rem .5rem; border-radius: 6px;
-      font-size: .75rem; font-weight: 600; color: #fff;
+      display: inline-block; font-size: .68rem; font-weight: 600;
+      padding: 2px 8px; border-radius: 6px; color: #fff;
     }
-    .fuel-badge.hybrid { background: var(--hybrid); }
-    .fuel-badge.phev { background: var(--phev); }
+    .fuel-badge.hev { background: #34a853; }
+    .fuel-badge.phev { background: #7b1fa2; }
 
+    /* ─── Cards ─── */
     .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
+      background: #fff; border-radius: 14px; padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      margin-bottom: 10px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
     }
-    .card.highlight { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .card.highlight { box-shadow: 0 0 0 2px #34a853, 0 2px 8px rgba(52,168,83,.2); }
 
-    .l-card {
-      display: flex; flex-wrap: wrap; gap: 1rem;
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.25rem; margin-bottom: .75rem;
-      align-items: center;
+    .card-rank {
+      font-size: 1.3rem; font-weight: 700; color: #c4c7cc;
+      min-width: 28px;
     }
-    .l-card:hover { border-color: #475569; }
-    .l-card .pos { font-size: 1.5rem; font-weight: 700; color: var(--muted); min-width: 2rem; width: 2rem; }
-    .l-card .info { flex: 1; min-width: 200px; }
-    .l-card .info .title { font-weight: 600; font-size: 1rem; }
-    .l-card .info .sub { color: var(--muted); font-size: .8rem; }
-    .l-card .specs { display: flex; gap: .75rem; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
-    .l-card .specs strong { color: var(--text); }
-    .l-card .actions { display: flex; gap: .5rem; align-items: center; }
+    .card-body { flex: 1; min-width: 160px; }
+    .card-title { font-weight: 600; font-size: .95rem; color: #1a1a2e; }
+    .card-sub {
+      font-size: .78rem; color: #5f6368; margin-top: 2px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+    }
+    .card-detail {
+      display: flex; align-items: center; gap: 14px;
+      font-size: .85rem; color: #1a1a2e; font-weight: 500;
+      white-space: nowrap;
+    }
+    .card-detail .label { color: #5f6368; font-weight: 400; }
+    .card-actions { display: flex; gap: 6px; margin-left: auto; }
+    .card-why {
+      width: 100%; font-size: .78rem; color: #e37400; margin-top: 4px;
+      display: flex; align-items: center; gap: 4px;
+    }
 
+    /* ─── Buttons ─── */
     .btn {
-      padding: .4rem .85rem; border-radius: 8px; border: 1px solid var(--border);
-      background: var(--card); color: var(--primary); font-size: .8rem; cursor: pointer;
-      text-decoration: none; display: inline-flex; align-items: center; gap: .3rem;
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 7px 14px; border-radius: 8px; font-size: .78rem;
+      font-weight: 500; cursor: pointer; border: 1px solid #dadce0;
+      background: #fff; color: #1a73e8; text-decoration: none;
+      white-space: nowrap; transition: background .15s;
     }
-    .btn:hover { background: #334155; color: #67e8f9; }
-    .btn.primary { background: var(--primary); color: #0f172a; border-color: var(--primary); font-weight: 600; }
-    .btn.primary:hover { background: #67e8f9; }
+    .btn:hover { background: #f1f3f4; }
+    .btn:active { background: #e8eaed; }
+    .btn.primary {
+      background: #1a73e8; color: #fff; border-color: #1a73e8;
+    }
+    .btn.primary:hover { background: #1557b0; }
+    .btn.primary:active { background: #0d47a1; }
+    .btn.sm { padding: 5px 10px; font-size: .72rem; }
 
-    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-    th, td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--border); }
-    th { color: var(--muted); font-weight: 500; font-size: .75rem; text-transform: uppercase; position: sticky; top: 0; background: var(--bg); }
-    tr:hover td { background: rgba(255,255,255,.03); }
-
+    /* ─── Modal ─── */
     .modal-overlay {
-      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
-      justify-content: center; align-items: center; z-index: 1000;
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5);
+      justify-content: center; align-items: flex-start; z-index: 1000;
+      padding: 16px; overflow-y: auto;
+      -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
     }
     .modal-overlay.open { display: flex; }
     .modal {
-      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-      padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
-      position: relative;
+      background: #fff; border-radius: 16px; padding: 24px;
+      max-width: 520px; width: 100%; margin-top: 40px;
+      box-shadow: 0 8px 32px rgba(0,0,0,.2); position: relative;
     }
     .modal-close {
-      position: absolute; top: 1rem; right: 1rem; background: none; border: none;
-      color: var(--muted); font-size: 1.5rem; cursor: pointer;
+      position: absolute; top: 16px; right: 16px;
+      background: none; border: none; font-size: 1.4rem;
+      color: #5f6368; cursor: pointer; width: 32px; height: 32px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
     }
-    .modal-close:hover { color: var(--text); }
-    .modal h2 { font-size: 1.2rem; margin-bottom: .5rem; }
-    .modal .sub { color: var(--muted); font-size: .85rem; margin-bottom: 1rem; }
-    .modal table { font-size: .85rem; }
-    .modal td { padding: .4rem .5rem; }
-    .modal td:first-child { font-weight: 500; color: var(--muted); white-space: nowrap; }
-    .modal .feat-yes { color: var(--accent); } .modal .feat-no { color: var(--danger); }
-    .modal .feat-opt { color: var(--warn); }
+    .modal-close:hover { background: #f1f3f4; }
+    .modal h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 2px; padding-right: 32px; }
+    .modal-sub { font-size: .82rem; color: #5f6368; margin-bottom: 16px; }
+    .modal table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+    .modal td { padding: 6px 0; border-bottom: 1px solid #f1f3f4; }
+    .modal td:first-child { font-weight: 500; color: #5f6368; width: 50%; }
+    .feat-yes { color: #34a853; } .feat-no { color: #dadce0; } .feat-opt { color: #f9ab00; }
 
-    .manual-links { display: flex; flex-direction: column; gap: .75rem; font-size: .85rem; }
-    .next-steps { margin-top: 2rem; }
-    .next-steps ol { padding-left: 1.25rem; color: var(--muted); }
-    .next-steps li { margin-bottom: .5rem; }
-    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .85rem; text-align: center; }
+    /* ─── Collapsible ─── */
+    .collapse-header {
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      padding: 12px 0 8px; user-select: none; color: #5f6368; font-size: .85rem;
+    }
+    .collapse-header:hover { color: #1a1a2e; }
+    .collapse-header .arrow { transition: transform .2s; }
+    .collapse-header.open .arrow { transform: rotate(90deg); }
+    .collapse-body { display: none; }
+    .collapse-body.open { display: block; }
 
-    @media (max-width: 600px) {
-      body { padding: 1rem; }
-      .l-card { flex-direction: column; align-items: flex-start; }
-      .l-card .pos { display: none; }
-      table { font-size: .75rem; }
-      th, td { padding: .4rem .3rem; }
+    /* ─── Manual Links ─── */
+    .manual-links {
+      background: #fff; border-radius: 14px; padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-top: 20px;
+    }
+    .manual-links h3 { font-size: .95rem; font-weight: 600; margin-bottom: 12px; }
+    .manual-links .link-group { margin-bottom: 10px; }
+    .manual-links .link-group strong { font-size: .82rem; }
+    .manual-links .link-group a {
+      display: block; font-size: .78rem; color: #1a73e8;
+      word-break: break-all; margin-top: 2px;
+    }
+    .manual-links .link-group a:hover { text-decoration: underline; }
+
+    /* ─── Next Steps ─── */
+    .next-steps {
+      background: #fff; border-radius: 14px; padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); margin-top: 12px;
+    }
+    .next-steps h3 { font-size: .95rem; font-weight: 600; margin-bottom: 8px; }
+    .next-steps ol { padding-left: 20px; font-size: .82rem; color: #5f6368; }
+    .next-steps li { margin-bottom: 6px; }
+    .next-steps li::marker { color: #1a73e8; font-weight: 600; }
+
+    /* ─── Footer ─── */
+    footer {
+      text-align: center; font-size: .78rem; color: #9aa0a6;
+      padding: 24px 0 32px; margin-top: 12px;
+    }
+    footer a { color: #1a73e8; text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 640px) {
+      .appbar-inner { height: 48px; }
+      .appbar-title { font-size: 1rem; }
+      .appbar-title small { display: none; }
+      .appbar-badge { font-size: .65rem; padding: 2px 8px; }
+      .container { padding: 12px; }
+      .card { padding: 12px; gap: 8px; }
+      .card-rank { font-size: 1rem; min-width: 20px; }
+      .card-title { font-size: .88rem; }
+      .card-detail { font-size: .8rem; gap: 10px; flex-wrap: wrap; }
+      .card-actions { width: 100%; justify-content: flex-end; }
+      .btn.sm { padding: 6px 10px; font-size: .7rem; }
+      .modal { padding: 20px; margin-top: 24px; }
+      .status-bar { font-size: .75rem; padding: 10px 12px; }
+    }
+    @media (max-width: 400px) {
+      .card-actions .btn { flex: 1; justify-content: center; }
     }
   </style>
 </head>
 <body>
+
+<!-- ─── App Bar ─── -->
+<header class="appbar">
+  <div class="appbar-inner">
+    <div class="appbar-title">
+      🚗 Hybrid SUV Finder
+      <small>Ireland</small>
+    </div>
+    <span class="appbar-badge" id="totalCount">0 listings</span>
+  </div>
+</header>
+
+<!-- ─── Main ─── -->
 <div class="container">
 
-  <h1>Hybrid SUV Finder <small>🇮🇪 Ireland</small></h1>
-  <p class="subtitle">Live-scraped from Irish car classifieds — hybrids only</p>
-
-  <div class="scrape-info">
-    <span class="dot green"></span> Scraped <span id="scrapeDate">loading…</span>
-    &middot; <span id="totalCount">0</span> hybrid listings found
-    &middot; Sources: <span class="source-badge ci">CarsIreland</span> <span class="source-badge cz">Carzone</span>
+  <!-- Status -->
+  <div class="status-bar">
+    <span class="dot green"></span>
+    Scraped <span id="scrapeDate">…</span>
+    <span>&middot;</span>
+    <span id="sourceInfo">CarsIreland + Carzone</span>
   </div>
 
-  <div class="filter-bar">
-    <span class="tag">⛽ Full Hybrid / PHEV only</span>
-    <span class="tag">💰 Up to €35,000</span>
-    <span class="tag">📏 Up to 100,000 km</span>
-    <span class="tag">📅 2017+</span>
-    <span class="tag">⚙ Automatic</span>
+  <!-- Filter Chips -->
+  <div class="chips">
+    <span class="chip">⛽ Hybrid / PHEV</span>
+    <span class="chip">💰 ≤€35k</span>
+    <span class="chip">📏 ≤100k km</span>
+    <span class="chip">📅 2017+</span>
+    <span class="chip">⚙ Auto</span>
   </div>
 
-  <!-- TOP 5 -->
-  <h2>🏆 Top 5 Picks</h2>
-
+  <!-- Top 5 -->
+  <div class="section-title">🏆 Top 5 Picks</div>
   <div id="top5"></div>
 
-  <!-- ALL OTHER HYBRIDS -->
-  <h2 style="margin-top:2rem;">📋 All Other Hybrids</h2>
-  <div id="otherHybrids"></div>
+  <!-- All Other Hybrids (collapsible) -->
+  <div id="otherSection">
+    <div class="section-title" style="margin-top: 4px;">
+      📋 All Hybrids
+      <span class="section-count" id="otherCount">0</span>
+    </div>
+    <div id="otherHybrids"></div>
+  </div>
 
-  <!-- MANUAL LINKS -->
-  <div class="card" style="margin-top:1.5rem;">
-    <h2 style="margin-bottom:.5rem;font-size:1.1rem;">🔍 Manual Search Links</h2>
-    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Open in browser — DoneDeal blocks scrapers:</p>
-    <div class="manual-links">
-      <div><strong>DoneDeal</strong> — SUV, Hybrid, €20k–€30k, &lt;70k km, 2021+<br>
-        <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=30000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank">donedeal.ie/cars/SUV-4x4-and-Pick-up/…</a>
-      </div>
-      <div><strong>Carzone</strong> — Hybrid, Auto, €0–€30k, &lt;70k km<br>
-        <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-30000&mileage=0-70000" target="_blank">carzone.ie/used-cars?fuel-type=HYBRID&…</a>
-      </div>
-      <div><strong>CarsIreland</strong><br>
-        <a href="https://www.carsireland.ie/used-cars?" target="_blank">carsireland.ie/used-cars (post-filter by fuel/price)</a>
-      </div>
-      <div><strong>Webgoto</strong> — Import dealers (UK/German imports)<br>
-        <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=30000" target="_blank">webgoto.com → Honda CR-V Hybrid imports</a>
-      </div>
+  <!-- Manual Links -->
+  <div class="manual-links">
+    <h3>🔍 Manual Search Links</h3>
+    <p style="font-size:.78rem;color:#5f6368;margin-bottom:12px;">Open in your browser — DoneDeal blocks scrapers</p>
+    <div class="link-group">
+      <strong>DoneDeal</strong> — SUV, Hybrid, €20k–€30k, &lt;70k km, 2021+
+      <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=30000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank">donedeal.ie &rsaquo; SUV Hybrid Search</a>
+    </div>
+    <div class="link-group">
+      <strong>Carzone</strong> — Hybrid, Auto, €0–€30k, &lt;70k km
+      <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-30000&mileage=0-70000" target="_blank">carzone.ie &rsaquo; Hybrid Search</a>
+    </div>
+    <div class="link-group">
+      <strong>CarsIreland</strong>
+      <a href="https://www.carsireland.ie/used-cars?" target="_blank">carsireland.ie &rsaquo; All Listings (post-filter)</a>
+    </div>
+    <div class="link-group">
+      <strong>Webgoto</strong> — Import dealers (UK/German imports)
+      <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=30000" target="_blank">webgoto.com &rsaquo; Honda CR-V Hybrid Imports</a>
     </div>
   </div>
 
-  <!-- NEXT STEPS -->
+  <!-- Next Steps -->
   <div class="next-steps">
-    <h2>➡️ Next Steps</h2>
+    <h3>➡️ Next Steps</h3>
     <ol>
-      <li>Click <strong>View Features</strong> on any listing to see trim specs (heated seats, CarPlay, etc.)</li>
-      <li>Open <strong>DoneDeal</strong> link above — it may have listings scrapers missed</li>
+      <li>Tap <strong>Features</strong> on any listing to check trim specs (heated seats, CarPlay, etc.)</li>
+      <li>Open <strong>DoneDeal</strong> above — may have listings scrapers can't reach</li>
       <li>Compare <strong>Top 5</strong> against your must-have features</li>
-      <li>Consider <strong>budget to €30k</strong> and <strong>2019+</strong> for best CR-V and RAV4 options</li>
-      <li>Check import dealers (Webgoto, Continental Cars Dublin) for German-imported CR-Vs</li>
+      <li>Consider <strong>€30k budget</strong> and <strong>2019+</strong> for best CR-V / RAV4 options</li>
+      <li>Check import dealers for German-imported CR-Vs</li>
       <li>Re-run scrapers weekly — market turns over fast</li>
     </ol>
   </div>
 
   <footer>
-    <p>car-finder · <a href="https://github.com/PrashanthHRao/car-finder" target="_blank">GitHub</a> ·
-    Deployed via GitHub Actions · Data from CarsIreland.ie &amp; Carzone.ie</p>
+    <a href="https://github.com/PrashanthHRao/car-finder" target="_blank">GitHub</a> &middot;
+    Data from CarsIreland.ie &amp; Carzone.ie &middot; Updated live
   </footer>
 </div>
 
-<!-- FEATURES MODAL -->
-<div class="modal-overlay" id="featureModal">
+<!-- ─── Features Modal ─── -->
+<div class="modal-overlay" id="featureModal" onclick="if(event.target===this)closeModal()">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">&times;</button>
-    <div id="modalContent"></div>
+    <h2 id="modalTitle"></h2>
+    <div class="modal-sub" id="modalTrim"></div>
+    <table id="modalTable"></table>
   </div>
 </div>
 
 <script>
 // ─── TRIM FEATURES DATABASE ────────────────────────────────────────────────
-// Source: Official OEM brochures and spec sheets
 const TRIMS = {
   "Honda CR-V HYBRID EX 2019": {
     "Heated Seats": true, "Heated Steering Wheel": false,
@@ -276,22 +376,11 @@ const TRIMS = {
     "Transmission": "e-CVT", "Drive": "FWD",
     "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
   },
-  "Honda CR-V HYBRID EX 4WD 2020": {
-    "Heated Seats": true, "Heated Steering Wheel": false,
-    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Blind Spot Monitoring": true, "Rear View Camera": true,
-    "Front Parking Sensors": true, "Rear Parking Sensors": true,
-    "Keyless Entry": true, "Power Tailgate": true,
-    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Leather Seats": false,
-    "Transmission": "e-CVT", "Drive": "AWD",
-    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
-  },
   "Toyota RAV4 HYBRID X 2020": {
     "Heated Seats": true, "Heated Steering Wheel": false,
     "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Rear View Camera": true, "Rear Parking Sensors": true,
-    "Front Parking Sensors": false, "Blind Spot Monitoring": false,
+    "Blind Spot Monitoring": false, "Rear View Camera": true,
+    "Rear Parking Sensors": true, "Front Parking Sensors": false,
     "Keyless Entry": true, "Power Tailgate": false,
     "Adaptive Cruise Control": true, "Lane Keep Assist": true,
     "Dual Zone Climate": true, "Leather Seats": false,
@@ -363,8 +452,7 @@ const TRIMS = {
     "Front Parking Sensors": false, "Rear Parking Sensors": true,
     "Keyless Entry": true, "Power Tailgate": false,
     "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": false,
-    "EV Range": "~50 km",
+    "Dual Zone Climate": false, "EV Range": "~50 km",
     "Transmission": "8-speed auto (e-EAT8)", "Drive": "FWD",
     "Engine": "1.6L + e-motor 165 kW", "Seats": 5
   },
@@ -375,8 +463,7 @@ const TRIMS = {
     "Front Parking Sensors": true, "Rear Parking Sensors": true,
     "Keyless Entry": true, "Power Tailgate": false,
     "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true,
-    "EV Range": "~56 km",
+    "Dual Zone Climate": true, "EV Range": "~56 km",
     "Transmission": "CVT (e-CVT)", "Drive": "FWD",
     "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
   },
@@ -399,8 +486,7 @@ const TRIMS = {
     "Front Parking Sensors": true, "Rear Parking Sensors": true,
     "Keyless Entry": true, "Power Tailgate": false,
     "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true,
-    "EV Range": "~56 km",
+    "Dual Zone Climate": true, "EV Range": "~56 km",
     "Transmission": "CVT (e-CVT)", "Drive": "FWD",
     "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
   },
@@ -434,12 +520,11 @@ const TRIMS = {
   "Mini Countryman COOPER S E ALL4 2021": {
     "Heated Seats": "Optional", "Heated Steering Wheel": true,
     "Apple CarPlay": "Wired", "Wireless CarPlay": false,
-    "Rear View Camera": true,
-    "Rear Parking Sensors": "Optional", "Blind Spot Monitoring": false,
+    "Rear View Camera": true, "Rear Parking Sensors": "Optional",
+    "Blind Spot Monitoring": false,
     "Keyless Entry": true, "Power Tailgate": false,
     "Adaptive Cruise Control": false, "Lane Keep Assist": false,
-    "Dual Zone Climate": true,
-    "EV Range": "~30 km",
+    "Dual Zone Climate": true, "EV Range": "~30 km",
     "Transmission": "6-speed Steptronic", "Drive": "AWD",
     "Engine": "1.5L 3-cyl + e-motor 164 kW", "Seats": 5
   },
@@ -450,8 +535,7 @@ const TRIMS = {
     "Front Parking Sensors": true, "Rear Parking Sensors": true,
     "Keyless Entry": true, "Power Tailgate": true,
     "Adaptive Cruise Control": true, "Lane Keep Assist": true,
-    "Dual Zone Climate": true, "Sunroof": true,
-    "EV Range": "~55 km",
+    "Dual Zone Climate": true, "Sunroof": true, "EV Range": "~55 km",
     "Transmission": "6-speed auto (PHEV)", "Drive": "FWD",
     "Engine": "1.6L T-GDI + e-motor 195 kW", "Seats": 5
   },
@@ -475,138 +559,111 @@ const TRIMS = {
     "Keyless Entry": true, "Power Tailgate": true,
     "Adaptive Cruise Control": true, "Pilot Assist": true,
     "Lane Keep Assist": true, "Dual Zone Climate": true,
-    "Leather Seats": true,
-    "EV Range": "~46 km",
+    "Leather Seats": true, "EV Range": "~46 km",
     "Transmission": "7-speed DCT", "Drive": "FWD",
     "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
   },
 };
 
-// ─── LISTING DATA ───────────────────────────────────────────────────────────
+// ─── LISTINGS ───────────────────────────────────────────────────────────────
 const LISTINGS = [
-  // TOP 5
-  { "pos":1,"model":"Hyundai Tucson Comfort Plus HEV","price":"€27,750","km":"41,000 km","kmRaw":41000,"year":"2023","loc":"Cork","link":"https://www.carsireland.ie/4441671?journey=Search","source":"CarsIreland","trimKey":"Hyundai Tucson COMFORT PLUS HEV 2023","fuel":"HEV","why":"Newest, low km, full HEV, heated wheel" },
-  { "pos":2,"model":"Honda CR-V HYBRID EX","price":"€23,950","km":"45,000 km","kmRaw":45000,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4405957?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID EX 2019","fuel":"HEV","why":"Cheapest CR-V hybrid, e-CVT, low km" },
-  { "pos":3,"model":"Mitsubishi Outlander PHEV","price":"€23,950","km":"10,763 km","kmRaw":10763,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4432045?journey=Search","source":"CarsIreland","trimKey":"Mitsubishi Outlander PHEV 2019","fuel":"PHEV","why":"Insanely low km, PHEV with 45 km EV range, 7 seats" },
-  { "pos":4,"model":"Ford Kuga PHEV Titanium","price":"€25,995","km":"84,622 km","kmRaw":84622,"year":"2021","loc":"Kildare","link":"https://www.carsireland.ie/4121150?journey=FeaturedListing","source":"CarsIreland","trimKey":"Ford Kuga PHEV Titanium 2021","fuel":"PHEV","why":"2021, PHEV, heated wheel, good value" },
-  { "pos":5,"model":"Honda CR-V EX HYBRID 4WD","price":"€28,950","km":"61,000 km","kmRaw":61000,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4407145?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V EX HYBRID 4WD 2020","fuel":"HEV","why":"CR-V with AWD, e-CVT, 61k km" },
+  { p:1, m:"Hyundai Tucson Comfort Plus HEV", pr:"€27,750", k:"41,000 km", y:"2023", l:"Cork", u:"https://www.carsireland.ie/4441671?journey=Search", s:"ci", tk:"Hyundai Tucson COMFORT PLUS HEV 2023", f:"hev", w:"Newest, low km, full HEV, heated wheel" },
+  { p:2, m:"Honda CR-V HYBRID EX", pr:"€23,950", k:"45,000 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4405957?journey=Search", s:"ci", tk:"Honda CR-V HYBRID EX 2019", f:"hev", w:"Cheapest CR-V hybrid, e-CVT, low km" },
+  { p:3, m:"Mitsubishi Outlander PHEV", pr:"€23,950", k:"10,763 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4432045?journey=Search", s:"ci", tk:"Mitsubishi Outlander PHEV 2019", f:"phev", w:"Insanely low km, PHEV with 45 km EV range, 7 seats" },
+  { p:4, m:"Ford Kuga PHEV Titanium", pr:"€25,995", k:"84,622 km", y:"2021", l:"Kildare", u:"https://www.carsireland.ie/4121150?journey=FeaturedListing", s:"ci", tk:"Ford Kuga PHEV Titanium 2021", f:"phev", w:"2021, PHEV, heated wheel, good value" },
+  { p:5, m:"Honda CR-V EX HYBRID 4WD", pr:"€28,950", k:"61,000 km", y:"2020", l:"Dublin", u:"https://www.carsireland.ie/4407145?journey=Search", s:"ci", tk:"Honda CR-V EX HYBRID 4WD 2020", f:"hev", w:"CR-V with AWD, e-CVT, 61k km" },
 
-  // ALL OTHER HYBRIDS
-  { "model":"Honda CR-V HYBRID EX MASTERPIECE","price":"€25,950","km":"74,000 km","kmRaw":74000,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4400362?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID EX MASTERPIECE 2019","fuel":"HEV" },
-  { "model":"Peugeot 3008 HYBRID2 PHEV Allure","price":"€20,950","km":"95,998 km","kmRaw":95998,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4439459?journey=Search","source":"CarsIreland","trimKey":"Peugeot 3008 HYBRID2 PHEV 2021","fuel":"PHEV" },
-  { "model":"Peugeot 3008 FL ALLURE 1.6 PHEV","price":"€20,950","km":"70,000 km","kmRaw":70000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4437023?journey=Search","source":"CarsIreland","trimKey":"Peugeot 3008 FL ALLURE 1.6 PHEV 2021","fuel":"PHEV" },
-  { "model":"Honda CR-V HYBRID","price":"€22,950","km":"84,000 km","kmRaw":84000,"year":"2018","loc":"Dublin","link":"https://www.carsireland.ie/4432457?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
-  { "model":"Mitsubishi Outlander BLACK EDITION PHEV","price":"€27,950","km":"45,000 km","kmRaw":45000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4434535?journey=Search","source":"CarsIreland","trimKey":"Mitsubishi Outlander BLACK EDITION PHEV 2021","fuel":"PHEV" },
-  { "model":"Volvo XC40 T5 Twin Engine PHEV Inscription","price":"€27,999","km":"93,000 km","kmRaw":93000,"year":"2021","loc":"Cork","link":"https://www.carsireland.ie/4427828?journey=Search","source":"CarsIreland","trimKey":"Volvo XC40 T5 Twin Engine PHEV 2021","fuel":"PHEV" },
-  { "model":"Toyota RAV4 2.5 Hybrid Automatic","price":"€28,500","km":"41,429 km","kmRaw":41429,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4433849?journey=FeaturedListing","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID X 2020","fuel":"HEV" },
-  { "model":"Ford Kuga Titanium 2.5 PHEV 225","price":"€28,945","km":"41,000 km","kmRaw":41000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4441260?journey=Search","source":"CarsIreland","trimKey":"Ford Kuga Titanium 2.5phev225 2021","fuel":"PHEV" },
-  { "model":"Honda CR-V HYBRID","price":"€28,950","km":"94,000 km","kmRaw":94000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4406221?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID X","price":"€28,950","km":"79,000 km","kmRaw":79000,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4436634?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID X 2020","fuel":"HEV" },
-  { "model":"Honda CR-V 2.0 HEV Elegance","price":"€29,850","km":"80,978 km","kmRaw":80978,"year":"2021","loc":"Limerick","link":"https://www.carsireland.ie/4380408?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V 2.0 HEV 2WD Elegance 2020","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€29,950","km":"83,963 km","kmRaw":83963,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4442310?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€29,950","km":"81,000 km","kmRaw":81000,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4434572?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
-  { "model":"Volvo XC40 T4 PHEV INSCRIPTION","price":"€29,950","km":"79,000 km","kmRaw":79000,"year":"2026","loc":"Dublin","link":"https://www.carsireland.ie/4367468?journey=Search","source":"CarsIreland","trimKey":"Volvo XC40 T4 PHEV INSCRIPTION 2026","fuel":"PHEV" },
-  { "model":"Mini Countryman COOPER S E ALL4","price":"€29,950","km":"69,274 km","kmRaw":69274,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4430254?journey=Search","source":"CarsIreland","trimKey":"Mini Countryman COOPER S E ALL4 2021","fuel":"PHEV" },
-  { "model":"Ford Kuga VIGNALE 2.5 PHEV","price":"€31,250","km":"42,447 km","kmRaw":42447,"year":"2022","loc":"Dublin","link":"https://www.carsireland.ie/4438378?journey=Search","source":"CarsIreland","trimKey":"Ford Kuga VIGNALE 2.5 PHEV 2022","fuel":"PHEV" },
-  { "model":"Honda CR-V HYBRID","price":"€31,950","km":"75,000 km","kmRaw":75000,"year":"2022","loc":"Dublin","link":"https://www.carsireland.ie/4435121?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€31,950","km":"91,249 km","kmRaw":91249,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4441146?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
-  { "model":"Kia Sportage K4 PHEV","price":"€33,945","km":"78,500 km","kmRaw":78500,"year":"2022","loc":"Dublin","link":"https://www.carsireland.ie/4441259?journey=Search","source":"CarsIreland","trimKey":"Kia Sportage K4 PHEV 2022","fuel":"PHEV" },
-  { "model":"Renault Captur E-TECH HYBRID","price":"€23,992","km":"53,290 km","kmRaw":53290,"year":"2024","loc":"Dublin","link":"https://www.carzone.ie/used-cars/renault/captur/fpa/4362278","source":"Carzone","trimKey":"Renault Captur TECHNO E-TECH HYBRID 2024","fuel":"HEV" },
-  { "model":"Honda CR-V HYBRID","price":"€29,900","km":"66,762 km","kmRaw":66762,"year":"2021","loc":"Clare","link":"https://www.carsireland.ie/4265913?journey=FeaturedListing","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
-  { "model":"Volvo XC40 PHEV T5 Inscription","price":"€30,950","km":"98,998 km","kmRaw":98998,"year":"2021","loc":"Cork","link":"https://www.carsireland.ie/4441017?journey=Search","source":"CarsIreland","trimKey":"Volvo XC40 PHEV T5 Inscription 2021","fuel":"PHEV" },
-  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€30,950","km":"99,291 km","kmRaw":99291,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4441170?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€30,950","km":"78,000 km","kmRaw":78000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4436614?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID","price":"€30,950","km":"41,000 km","kmRaw":41000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4436621?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
-  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€31,950","km":"70,106 km","kmRaw":70106,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4442318?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { m:"Honda CR-V HYBRID EX MASTERPIECE", pr:"€25,950", k:"74,000 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4400362?journey=Search", s:"ci", tk:"Honda CR-V HYBRID EX MASTERPIECE 2019", f:"hev" },
+  { m:"Peugeot 3008 HYBRID2 PHEV Allure", pr:"€20,950", k:"95,998 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4439459?journey=Search", s:"ci", tk:"Peugeot 3008 HYBRID2 PHEV 2021", f:"phev" },
+  { m:"Peugeot 3008 FL ALLURE 1.6 PHEV", pr:"€20,950", k:"70,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4437023?journey=Search", s:"ci", tk:"Peugeot 3008 FL ALLURE 1.6 PHEV 2021", f:"phev" },
+  { m:"Honda CR-V HYBRID", pr:"€22,950", k:"84,000 km", y:"2018", l:"Dublin", u:"https://www.carsireland.ie/4432457?journey=Search", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
+  { m:"Renault Captur E-TECH HYBRID", pr:"€23,992", k:"53,290 km", y:"2024", l:"Dublin", u:"https://www.carzone.ie/used-cars/renault/captur/fpa/4362278", s:"cz", tk:"Renault Captur TECHNO E-TECH HYBRID 2024", f:"hev" },
+  { m:"Mitsubishi Outlander BLACK EDITION PHEV", pr:"€27,950", k:"45,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4434535?journey=Search", s:"ci", tk:"Mitsubishi Outlander BLACK EDITION PHEV 2021", f:"phev" },
+  { m:"Volvo XC40 T5 Twin Engine PHEV Inscription", pr:"€27,999", k:"93,000 km", y:"2021", l:"Cork", u:"https://www.carsireland.ie/4427828?journey=Search", s:"ci", tk:"Volvo XC40 T5 Twin Engine PHEV 2021", f:"phev" },
+  { m:"Toyota RAV4 2.5 Hybrid Auto", pr:"€28,500", k:"41,429 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4433849?journey=FeaturedListing", s:"ci", tk:"Toyota RAV4 HYBRID X 2020", f:"hev" },
+  { m:"Ford Kuga Titanium 2.5 PHEV 225", pr:"€28,945", k:"41,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4441260?journey=Search", s:"ci", tk:"Ford Kuga Titanium 2.5phev225 2021", f:"phev" },
+  { m:"Honda CR-V HYBRID", pr:"€28,950", k:"94,000 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4406221?journey=Search", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
+  { m:"Toyota RAV4 HYBRID X", pr:"€28,950", k:"79,000 km", y:"2020", l:"Dublin", u:"https://www.carsireland.ie/4436634?journey=Search", s:"ci", tk:"Toyota RAV4 HYBRID X 2020", f:"hev" },
+  { m:"Honda CR-V 2.0 HEV Elegance", pr:"€29,850", k:"80,978 km", y:"2021", l:"Limerick", u:"https://www.carsireland.ie/4380408?journey=Search", s:"ci", tk:"Honda CR-V 2.0 HEV 2WD Elegance 2020", f:"hev" },
+  { m:"Honda CR-V HYBRID", pr:"€29,900", k:"66,762 km", y:"2021", l:"Clare", u:"https://www.carsireland.ie/4265913?journey=FeaturedListing", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
+  { m:"Toyota RAV4 HYBRID G 4WD", pr:"€29,950", k:"83,963 km", y:"2019", l:"Dublin", u:"https://www.carsireland.ie/4442310?journey=Search", s:"ci", tk:"Toyota RAV4 HYBRID G 4WD 2020", f:"hev" },
+  { m:"Toyota RAV4 HYBRID G 4WD", pr:"€29,950", k:"81,000 km", y:"2020", l:"Dublin", u:"https://www.carsireland.ie/4434572?journey=Search", s:"ci", tk:"Toyota RAV4 HYBRID G 4WD 2020", f:"hev" },
+  { m:"Volvo XC40 T4 PHEV INSCRIPTION", pr:"€29,950", k:"79,000 km", y:"2026", l:"Dublin", u:"https://www.carsireland.ie/4367468?journey=Search", s:"ci", tk:"Volvo XC40 T4 PHEV INSCRIPTION 2026", f:"phev" },
+  { m:"Mini Countryman COOPER S E ALL4", pr:"€29,950", k:"69,274 km", y:"2021", l:"Dublin", u:"https://www.carsireland.ie/4430254?journey=Search", s:"ci", tk:"Mini Countryman COOPER S E ALL4 2021", f:"phev" },
+  { m:"Volvo XC40 PHEV T5 Inscription", pr:"€30,950", k:"98,998 km", y:"2021", l:"Cork", u:"https://www.carsireland.ie/4441017?journey=Search", s:"ci", tk:"Volvo XC40 PHEV T5 Inscription 2021", f:"phev" },
+  { m:"Ford Kuga VIGNALE 2.5 PHEV", pr:"€31,250", k:"42,447 km", y:"2022", l:"Dublin", u:"https://www.carsireland.ie/4438378?journey=Search", s:"ci", tk:"Ford Kuga VIGNALE 2.5 PHEV 2022", f:"phev" },
+  { m:"Honda CR-V HYBRID", pr:"€31,950", k:"75,000 km", y:"2022", l:"Dublin", u:"https://www.carsireland.ie/4435121?journey=Search", s:"ci", tk:"Honda CR-V HYBRID 2021", f:"hev" },
+  { m:"Kia Sportage K4 PHEV", pr:"€33,945", k:"78,500 km", y:"2022", l:"Dublin", u:"https://www.carsireland.ie/4441259?journey=Search", s:"ci", tk:"Kia Sportage K4 PHEV 2022", f:"phev" },
 ];
 
 // ─── RENDER ─────────────────────────────────────────────────────────────────
 const NOW = new Date();
-
 document.getElementById('scrapeDate').textContent = NOW.toLocaleString('en-IE', {
-  day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'
 });
-document.getElementById('totalCount').textContent = LISTINGS.length;
+document.getElementById('totalCount').textContent = LISTINGS.length + ' listings';
 
-function fmtFuel(f) {
-  const cls = f === 'PHEV' ? 'phev' : 'hybrid';
-  return `<span class="fuel-badge ${cls}">${f}</span>`;
+const SRC_NAMES = { ci:'CarsIreland', cz:'Carzone' };
+
+function cardHTML(l) {
+  const tag = l.p ? l.p <= 5 : false;
+  const hasTrim = l.tk && TRIMS[l.tk];
+  const srcLabel = SRC_NAMES[l.s] || l.s;
+  return `<div class="card ${l.p === 1 ? 'highlight' : ''}">
+    <div class="card-rank">${tag ? '#'+l.p : ''}</div>
+    <div class="card-body">
+      <div class="card-title">${l.m}</div>
+      <div class="card-sub">
+        <span>${l.y}</span>
+        <span>&middot;</span>
+        <span>${l.l}</span>
+        <span class="src-badge ${l.s}">${srcLabel}</span>
+        <span class="fuel-badge ${l.f}">${l.f.toUpperCase()}</span>
+      </div>
+      ${l.w ? `<div class="card-why">⭐ ${l.w}</div>` : ''}
+    </div>
+    <div class="card-detail">
+      <span class="label">€</span> ${l.pr}
+    </div>
+    <div class="card-detail">
+      <span class="label">km</span> ${l.k.replace(' km','')}
+    </div>
+    <div class="card-actions">
+      ${hasTrim ? `<button class="btn sm" onclick="showFeat('${l.tk}','${l.m.replace(/'/g,"\\'")}')">Features</button>` : ''}
+      <a class="btn primary sm" href="${l.u}" target="_blank">View</a>
+    </div>
+  </div>`;
 }
 
-function fmtSource(s) {
-  const cls = s === 'CarsIreland' ? 'ci' : s === 'Carzone' ? 'cz' : 'dd';
-  return `<span class="source-badge ${cls}">${s}</span>`;
-}
+document.getElementById('top5').innerHTML = LISTINGS.filter(l => l.p && l.p <= 5)
+  .sort((a,b) => a.p - b.p).map(cardHTML).join('');
 
-function renderCard(l) {
-  const top5 = l.pos ? l.pos <= 5 : false;
-  const hasTrim = l.trimKey && TRIMS[l.trimKey];
-  return `
-    <div class="l-card">
-      <div class="pos">${top5 ? '#' + l.pos : ''}</div>
-      <div class="info">
-        <div class="title">${l.model}</div>
-        <div class="sub">${l.year} &middot; ${l.loc} &middot; ${fmtSource(l.source)} ${fmtFuel(l.fuel)}</div>
-      </div>
-      <div class="specs">
-        <span>💰 <strong>${l.price}</strong></span>
-        <span>📏 <strong>${l.km}</strong></span>
-      </div>
-      <div class="actions">
-        ${hasTrim ? `<button class="btn" onclick="showFeatures('${l.trimKey}','${l.model.replace(/'/g,"\\'")}')">🔍 Features</button>` : ''}
-        <a class="btn primary" href="${l.link}" target="_blank">View ↗</a>
-      </div>
-      ${l.why ? `<div style="width:100%;font-size:.8rem;color:var(--warn);margin-top:.25rem;">⭐ ${l.why}</div>` : ''}
-    </div>`;
-}
-
-// Render top 5
-document.getElementById('top5').innerHTML = LISTINGS.filter(l => l.pos && l.pos <= 5)
-  .sort((a, b) => a.pos - b.pos)
-  .map(renderCard).join('');
-
-// Render others
-document.getElementById('otherHybrids').innerHTML = LISTINGS.filter(l => !l.pos || l.pos > 5)
-  .map((l, i) => renderCard({ ...l, pos: i + 6 })).join('');
+const others = LISTINGS.filter(l => !l.p || l.p > 5);
+document.getElementById('otherCount').textContent = others.length;
+document.getElementById('otherHybrids').innerHTML = others.map(cardHTML).join('');
 
 // ─── FEATURES MODAL ─────────────────────────────────────────────────────────
-function showFeatures(trimKey, modelName) {
-  const trim = TRIMS[trimKey];
-  if (!trim) return;
-  const keys = Object.keys(trim);
-  // Sort: must-have features first
-  const priority = ['Heated Seats','Heated Steering Wheel','Wireless CarPlay','Apple CarPlay','Blind Spot Monitoring','Rear View Camera','Front Parking Sensors','Rear Parking Sensors','Keyless Entry','Power Tailgate','Adaptive Cruise Control','Lane Keep Assist','360 Camera','Sunroof','Leather Seats','Dual Zone Climate','7 Seats','EV Range','Transmission','Drive','Engine','Seats','Memory Seats','Harman Kardon Audio','Black Edition styling'];
-  const sorted = keys.sort((a, b) => {
-    const ia = priority.indexOf(a), ib = priority.indexOf(b);
-    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+function showFeat(key, name) {
+  const t = TRIMS[key]; if (!t) return;
+  const order = ['Heated Seats','Heated Steering Wheel','Wireless CarPlay','Apple CarPlay','Blind Spot Monitoring','Rear View Camera','Front Parking Sensors','Rear Parking Sensors','Keyless Entry','Power Tailgate','Adaptive Cruise Control','Lane Keep Assist','360 Camera','Sunroof','Leather Seats','Dual Zone Climate','7 Seats','EV Range','Transmission','Drive','Engine','Seats','Memory Seats','Harman Kardon Audio','Pilot Assist','Black Edition styling'];
+  const keys = Object.keys(t).sort((a,b) => {
+    const ia = order.indexOf(a), ib = order.indexOf(b);
+    return (ia===-1?99:ia) - (ib===-1?99:ib);
   });
-
-  let rows = sorted.map(k => {
-    let v = trim[k];
-    let icon = '';
+  document.getElementById('modalTitle').textContent = name;
+  document.getElementById('modalTrim').textContent = 'Trim: ' + key;
+  document.getElementById('modalTable').innerHTML = keys.map(k => {
+    let v = t[k], icon;
     if (v === true) { icon = '<span class="feat-yes">✔</span>'; v = 'Yes'; }
     else if (v === false) { icon = '<span class="feat-no">✘</span>'; v = 'No'; }
     else if (v === 'Optional') { icon = '<span class="feat-opt">●</span>'; }
-    else { icon = '·'; }
+    else icon = '·';
     return `<tr><td>${k}</td><td>${icon} ${v}</td></tr>`;
   }).join('');
-
-  document.getElementById('modalContent').innerHTML = `
-    <h2>${modelName}</h2>
-    <div class="sub">Trim: ${trimKey}</div>
-    <table>${rows}</table>
-  `;
   document.getElementById('featureModal').classList.add('open');
 }
-
-function closeModal() {
-  document.getElementById('featureModal').classList.remove('open');
-}
-
-document.getElementById('featureModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('featureModal')) closeModal();
-});
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+function closeModal() { document.getElementById('featureModal').classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
 </script>
 </body>
 </html>
