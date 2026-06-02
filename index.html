@@ -6,27 +6,16 @@
   <title>Hybrid SUV Finder — Ireland</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --border: #334155;
-      --text: #f1f5f9;
-      --muted: #94a3b8;
-      --accent: #22c55e;
-      --warn: #f59e0b;
-      --danger: #ef4444;
+      --bg: #0f172a; --card: #1e293b; --border: #334155;
+      --text: #f1f5f9; --muted: #94a3b8;
+      --accent: #22c55e; --warn: #f59e0b; --danger: #ef4444;
       --primary: #22d3ee;
-      --hybrid: #22c55e;
-      --phev: #8b5cf6;
-      --petrol: #f59e0b;
-      --diesel: #ef4444;
+      --hybrid: #22c55e; --phev: #8b5cf6;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-      padding: 2rem;
+      background: var(--bg); color: var(--text); line-height: 1.6; padding: 2rem;
     }
     .container { max-width: 1100px; margin: 0 auto; }
     a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
@@ -36,45 +25,40 @@
     h1 small { font-size: 1rem; color: var(--muted); font-weight: 400; }
     .subtitle { color: var(--muted); margin-bottom: 2rem; }
 
-    .filters {
+    .scrape-info {
+      display: flex; align-items: center; gap: .5rem;
+      color: var(--muted); font-size: .85rem; margin-bottom: 1.5rem;
+    }
+    .scrape-info .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+    .scrape-info .dot.green { background: var(--accent); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .4; } }
+
+    .filter-bar {
       display: flex; flex-wrap: wrap; gap: .75rem;
       background: var(--card); border: 1px solid var(--border);
       border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;
     }
-    .filters .tag {
+    .filter-bar .tag {
       background: #1f3a4b; color: var(--primary);
       padding: .35rem .85rem; border-radius: 20px;
       font-size: .85rem; font-weight: 500;
     }
-    .filters .tag.strict { color: var(--warn); background: #3b2f1a; }
-    .filters .tag.relaxed { color: var(--accent); background: #1a3b1a; }
 
     h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
-    h2 .badge {
-      font-size: .7rem; padding: .15rem .6rem; border-radius: 10px;
-      color: #fff; font-weight: 600;
+    .badge {
+      font-size: .7rem; padding: .15rem .6rem; border-radius: 10px; color: #fff; font-weight: 600;
     }
     .badge.hybrid { background: var(--hybrid); }
     .badge.phev { background: var(--phev); }
-    .badge.petrol { background: var(--petrol); }
-    .badge.diesel { background: var(--danger); }
-    .badge.unknown { background: var(--muted); }
+    .badge.live { background: var(--accent); }
 
-    .card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
+    .source-badge {
+      display: inline-block; padding: .15rem .5rem; border-radius: 6px;
+      font-size: .7rem; font-weight: 600; color: #fff;
     }
-    .card.highlight {
-      border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent);
-    }
-    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .5rem; }
-    .card-title { font-size: 1.1rem; font-weight: 600; }
-    .card-price { font-size: 1.4rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
-    .card-details { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .9rem; margin-bottom: .75rem; }
-    .card-details span { display: flex; align-items: center; gap: .3rem; }
-    .card-details strong { color: var(--text); font-weight: 500; }
-    .card-link { font-size: .85rem; word-break: break-all; margin-top: .25rem; }
-    .card-note { margin-top: .5rem; font-size: .85rem; color: var(--warn); }
+    .source-badge.ci { background: #2563eb; }
+    .source-badge.cz { background: #dc2626; }
+    .source-badge.dd { background: #16a34a; }
 
     .fuel-badge {
       display: inline-block; padding: .15rem .5rem; border-radius: 6px;
@@ -82,41 +66,75 @@
     }
     .fuel-badge.hybrid { background: var(--hybrid); }
     .fuel-badge.phev { background: var(--phev); }
-    .fuel-badge.petrol { background: var(--petrol); }
-    .fuel-badge.diesel { background: var(--danger); }
-    .fuel-badge.unknown { background: #475569; }
 
-    table {
-      width: 100%; border-collapse: collapse; font-size: .85rem;
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
     }
+    .card.highlight { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+
+    .l-card {
+      display: flex; flex-wrap: wrap; gap: 1rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem; margin-bottom: .75rem;
+      align-items: center;
+    }
+    .l-card:hover { border-color: #475569; }
+    .l-card .pos { font-size: 1.5rem; font-weight: 700; color: var(--muted); min-width: 2rem; width: 2rem; }
+    .l-card .info { flex: 1; min-width: 200px; }
+    .l-card .info .title { font-weight: 600; font-size: 1rem; }
+    .l-card .info .sub { color: var(--muted); font-size: .8rem; }
+    .l-card .specs { display: flex; gap: .75rem; font-size: .85rem; color: var(--muted); flex-wrap: wrap; }
+    .l-card .specs strong { color: var(--text); }
+    .l-card .actions { display: flex; gap: .5rem; align-items: center; }
+
+    .btn {
+      padding: .4rem .85rem; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--card); color: var(--primary); font-size: .8rem; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: .3rem;
+    }
+    .btn:hover { background: #334155; color: #67e8f9; }
+    .btn.primary { background: var(--primary); color: #0f172a; border-color: var(--primary); font-weight: 600; }
+    .btn.primary:hover { background: #67e8f9; }
+
+    table { width: 100%; border-collapse: collapse; font-size: .85rem; }
     th, td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--border); }
     th { color: var(--muted); font-weight: 500; font-size: .75rem; text-transform: uppercase; position: sticky; top: 0; background: var(--bg); }
     tr:hover td { background: rgba(255,255,255,.03); }
-    td:first-child { font-weight: 600; white-space: nowrap; }
-    td .link-icon { opacity: .5; }
 
-    .site-status { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
-    .site-status .site {
-      display: flex; align-items: center; gap: .5rem;
-      padding: .5rem 1rem; border-radius: 8px;
-      background: var(--card); border: 1px solid var(--border); font-size: .85rem;
+    .modal-overlay {
+      display: none; position: fixed; inset: 0; background: rgba(0,0,0,.7);
+      justify-content: center; align-items: center; z-index: 1000;
     }
-    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-    .dot.green { background: var(--accent); }
-    .dot.red { background: var(--danger); }
-    .dot.yellow { background: var(--warn); }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2rem; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+      color: var(--muted); font-size: 1.5rem; cursor: pointer;
+    }
+    .modal-close:hover { color: var(--text); }
+    .modal h2 { font-size: 1.2rem; margin-bottom: .5rem; }
+    .modal .sub { color: var(--muted); font-size: .85rem; margin-bottom: 1rem; }
+    .modal table { font-size: .85rem; }
+    .modal td { padding: .4rem .5rem; }
+    .modal td:first-child { font-weight: 500; color: var(--muted); white-space: nowrap; }
+    .modal .feat-yes { color: var(--accent); } .modal .feat-no { color: var(--danger); }
+    .modal .feat-opt { color: var(--warn); }
 
+    .manual-links { display: flex; flex-direction: column; gap: .75rem; font-size: .85rem; }
     .next-steps { margin-top: 2rem; }
     .next-steps ol { padding-left: 1.25rem; color: var(--muted); }
     .next-steps li { margin-bottom: .5rem; }
-
-    .search-links { display: flex; flex-direction: column; gap: .75rem; font-size: .85rem; }
-
     footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .85rem; text-align: center; }
 
     @media (max-width: 600px) {
       body { padding: 1rem; }
-      .card-header { flex-direction: column; gap: .5rem; }
+      .l-card { flex-direction: column; align-items: flex-start; }
+      .l-card .pos { display: none; }
       table { font-size: .75rem; }
       th, td { padding: .4rem .3rem; }
     }
@@ -126,169 +144,469 @@
 <div class="container">
 
   <h1>Hybrid SUV Finder <small>🇮🇪 Ireland</small></h1>
-  <p class="subtitle">Scraping Carzone, CarsIreland &amp; DoneDeal — updated June 2026</p>
+  <p class="subtitle">Live-scraped from Irish car classifieds — hybrids only</p>
 
-  <!-- Filters -->
-  <div class="filters">
-    <span class="tag strict">💰 €0 – €28k (strict)</span>
-    <span class="tag relaxed">💰 Up to €30k (relaxed)</span>
-    <span class="tag strict">📏 &lt; 70k km</span>
-    <span class="tag relaxed">📏 Up to 80k km</span>
-    <span class="tag strict">📅 2021+</span>
-    <span class="tag relaxed">📅 2019+</span>
-    <span class="tag">⛽ Hybrid / PHEV</span>
+  <div class="scrape-info">
+    <span class="dot green"></span> Scraped <span id="scrapeDate">loading…</span>
+    &middot; <span id="totalCount">0</span> hybrid listings found
+    &middot; Sources: <span class="source-badge ci">CarsIreland</span> <span class="source-badge cz">Carzone</span>
+  </div>
+
+  <div class="filter-bar">
+    <span class="tag">⛽ Full Hybrid / PHEV only</span>
+    <span class="tag">💰 Up to €35,000</span>
+    <span class="tag">📏 Up to 100,000 km</span>
+    <span class="tag">📅 2017+</span>
     <span class="tag">⚙ Automatic</span>
   </div>
 
-  <!-- Site Status -->
-  <div class="site-status">
-    <div class="site"><span class="dot green"></span> Carzone.ie</div>
-    <div class="site"><span class="dot green"></span> CarsIreland.ie</div>
-    <div class="site"><span class="dot red"></span> DoneDeal.ie <small style="color:#94a3b8">(Cloudflare)</small></div>
-    <div class="site"><span class="dot red"></span> AutoTrader.ie <small style="color:#94a3b8">(blocked)</small></div>
-  </div>
+  <!-- TOP 5 -->
+  <h2>🏆 Top 5 Picks</h2>
 
-  <!-- Best Match -->
-  <h2>🏆 Top Pick <span class="badge hybrid">HYBRID</span></h2>
-  <div class="card highlight">
-    <div class="card-header">
-      <div>
-        <div class="card-title">Hyundai Tucson Comfort Plus HEV</div>
-        <div style="color: var(--muted); font-size: .85rem;">Full Hybrid · 1.6 T-GDI + 44 kW electric · 6-speed auto</div>
-      </div>
-      <div class="card-price">€27,750</div>
-    </div>
-    <div class="card-details">
-      <span>📏 <strong>41,000 km</strong></span>
-      <span>📅 <strong>2023</strong> (231 reg)</span>
-      <span>📍 <strong>Cork</strong></span>
-      <span>⛽ <span class="fuel-badge hybrid">HEV</span></span>
-      <span>🎨 Grey</span>
-    </div>
-    <div class="card-link">🔗 <a href="https://www.carsireland.ie/4441671?journey=Search" target="_blank">carsireland.ie/4441671</a></div>
-    <div class="card-note">⚠️ Only car meeting strict criteria (2021+, &lt;70k km, €28k). In Cork — ask about Dublin delivery.</div>
-  </div>
+  <div id="top5"></div>
 
-  <!-- All Confirmed Hybrids (Relaxed) -->
-  <h2>⚡ All Confirmed Hybrids Found <span class="badge hybrid">7</span></h2>
-  <table>
-    <thead>
-      <tr><th>#</th><th>Model</th><th>Fuel</th><th>Price</th><th>KM</th><th>Year</th><th>Location</th><th></th></tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>1</td><td>Honda CR-V HYBRID EX</td>
-        <td><span class="fuel-badge hybrid">HEV</span></td>
-        <td>€23,950</td><td>45,000</td><td>2019</td><td>Dublin</td>
-        <td><a href="https://www.carsireland.ie/4405957?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-      <tr>
-        <td>2</td><td>Mitsubishi Outlander PHEV</td>
-        <td><span class="fuel-badge phev">PHEV</span></td>
-        <td>€23,950</td><td>10,763</td><td>2019</td><td>Dublin</td>
-        <td><a href="https://www.carsireland.ie/4432045?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-      <tr>
-        <td>3</td><td>Honda CR-V HYBRID EX MASTERPIECE</td>
-        <td><span class="fuel-badge hybrid">HEV</span></td>
-        <td>€25,950</td><td>74,000</td><td>2019</td><td>Dublin</td>
-        <td><a href="https://www.carsireland.ie/4400362?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-      <tr>
-        <td>4</td><td>Hyundai Tucson Comfort Plus HEV</td>
-        <td><span class="fuel-badge hybrid">HEV</span></td>
-        <td>€27,750</td><td>41,000</td><td>2023</td><td>Cork</td>
-        <td><a href="https://www.carsireland.ie/4441671?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-      <tr>
-        <td>5</td><td>Mitsubishi Outlander BLACK EDITION PHEV</td>
-        <td><span class="fuel-badge phev">PHEV</span></td>
-        <td>€27,950</td><td>45,000</td><td>2021</td><td>Dublin</td>
-        <td><a href="https://www.carsireland.ie/4434535?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-      <tr>
-        <td>6</td><td>Honda CR-V EX HYBRID 4WD</td>
-        <td><span class="fuel-badge hybrid">HEV</span></td>
-        <td>€28,950</td><td>61,000</td><td>2020</td><td>Dublin</td>
-        <td><a href="https://www.carsireland.ie/4407145?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-      <tr>
-        <td>7</td><td>Toyota RAV4 HYBRID X</td>
-        <td><span class="fuel-badge hybrid">HEV</span></td>
-        <td>€28,950</td><td>79,000</td><td>2020</td><td>Dublin</td>
-        <td><a href="https://www.carsireland.ie/4436634?journey=Search" target="_blank" class="link-icon">↗</a></td>
-      </tr>
-    </tbody>
-  </table>
+  <!-- ALL OTHER HYBRIDS -->
+  <h2 style="margin-top:2rem;">📋 All Other Hybrids</h2>
+  <div id="otherHybrids"></div>
 
-  <!-- All Listings with Relaxed Criteria -->
-  <h2 style="margin-top:2rem;">📋 All Listings (Relaxed: €30k / 80k km / 2019+)</h2>
-  <table>
-    <thead>
-      <tr><th>#</th><th>Model</th><th>Fuel</th><th>Price</th><th>KM</th><th>Year</th><th>Location</th><th></th></tr>
-    </thead>
-    <tbody>
-      <tr><td>1</td><td>Toyota RAV4 D-4D Luna Sport</td><td><span class="fuel-badge diesel">Diesel</span></td><td>€14,950</td><td>12,000</td><td>2026</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4439274?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>2</td><td>Kia Sportage K3</td><td><span class="fuel-badge unknown">?</span></td><td>€19,950</td><td>68,319</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4444647?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>3</td><td>Nissan X-Trail 1.7 SV Premium</td><td><span class="fuel-badge unknown">?</span></td><td>€23,945</td><td>73,834</td><td>2019</td><td>Kildare</td><td><a href="https://www.carsireland.ie/4438137?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>4</td><td>Honda CR-V EX Masterpiece</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€23,950</td><td>32,000</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4410057?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(34,197,94,.05);"><td>5</td><td><strong>Honda CR-V HYBRID EX</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€23,950</strong></td><td><strong>45,000</strong></td><td><strong>2019</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4405957?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>6</td><td>Nissan X-Trail 1.3 PET SV DCT</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€23,950</td><td>77,000</td><td>??</td><td>Limerick</td><td><a href="https://www.carsireland.ie/4439740?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(139,92,246,.05);"><td>7</td><td><strong>Mitsubishi Outlander PHEV</strong></td><td><span class="fuel-badge phev">PHEV</span></td><td><strong>€23,950</strong></td><td><strong>10,763</strong></td><td><strong>2019</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4432045?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>8</td><td>Honda CR-V EX Masterpiece</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€24,950</td><td>80,000</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4409880?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>9</td><td>Honda CR-V EX Masterpiece</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€24,950</td><td>67,000</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4407495?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(34,197,94,.05);"><td>10</td><td><strong>Honda CR-V HYBRID EX Masterpiece</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€25,950</strong></td><td><strong>74,000</strong></td><td><strong>2019</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4400362?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(34,197,94,.08);"><td>11</td><td><strong>Hyundai Tucson Comfort Plus HEV</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€27,750</strong></td><td><strong>41,000</strong></td><td><strong>2023</strong></td><td><strong>Cork</strong></td><td><a href="https://www.carsireland.ie/4441671?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(139,92,246,.05);"><td>12</td><td><strong>Mitsubishi Outlander BLACK EDITION PHEV</strong></td><td><span class="fuel-badge phev">PHEV</span></td><td><strong>€27,950</strong></td><td><strong>45,000</strong></td><td><strong>2021</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4434535?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(34,197,94,.05);"><td>13</td><td><strong>Honda CR-V EX HYBRID 4WD</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€28,950</strong></td><td><strong>61,000</strong></td><td><strong>2020</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4407145?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr style="background: rgba(34,197,94,.05);"><td>14</td><td><strong>Toyota RAV4 HYBRID X</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€28,950</strong></td><td><strong>79,000</strong></td><td><strong>2020</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4436634?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>15</td><td>Hyundai Tucson IX35 Executive</td><td><span class="fuel-badge unknown">?</span></td><td>€28,950</td><td>53,000</td><td>2023</td><td>Wexford</td><td><a href="https://www.carsireland.ie/4441599?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-      <tr><td>16</td><td>Hyundai Tucson IX35 Executive</td><td><span class="fuel-badge unknown">?</span></td><td>€28,950</td><td>37,588</td><td>2022</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4439329?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
-    </tbody>
-  </table>
-
-  <!-- Manual Search Links -->
+  <!-- MANUAL LINKS -->
   <div class="card" style="margin-top:1.5rem;">
     <h2 style="margin-bottom:.5rem;font-size:1.1rem;">🔍 Manual Search Links</h2>
-    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Open these in your browser — DoneDeal blocks scrapers:</p>
-    <div class="search-links">
-      <div>
-        <strong>DoneDeal</strong> — SUV, Hybrid, €20k–€28k, &lt;70k km, 2021+<br>
-        <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=28000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank">donedeal.ie/cars/SUV-4x4-and-Pick-up/…</a>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Open in browser — DoneDeal blocks scrapers:</p>
+    <div class="manual-links">
+      <div><strong>DoneDeal</strong> — SUV, Hybrid, €20k–€30k, &lt;70k km, 2021+<br>
+        <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=30000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank">donedeal.ie/cars/SUV-4x4-and-Pick-up/…</a>
       </div>
-      <div>
-        <strong>Carzone</strong> — Hybrid, Automatic, €0–€28k, &lt;70k km<br>
-        <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-28000&mileage=0-70000" target="_blank">carzone.ie/used-cars?fuel-type=HYBRID&…</a>
+      <div><strong>Carzone</strong> — Hybrid, Auto, €0–€30k, &lt;70k km<br>
+        <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-30000&mileage=0-70000" target="_blank">carzone.ie/used-cars?fuel-type=HYBRID&…</a>
       </div>
-      <div>
-        <strong>CarsIreland</strong> — All makes, then filter by fuel/price<br>
-        <a href="https://www.carsireland.ie/used-cars?" target="_blank">carsireland.ie/used-cars (post-filter)</a>
+      <div><strong>CarsIreland</strong><br>
+        <a href="https://www.carsireland.ie/used-cars?" target="_blank">carsireland.ie/used-cars (post-filter by fuel/price)</a>
       </div>
-      <div>
-        <strong>Webgoto</strong> — Import dealers (UK/German imports)<br>
-        <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=28000" target="_blank">webgoto.com → Honda CR-V Hybrid import search</a>
+      <div><strong>Webgoto</strong> — Import dealers (UK/German imports)<br>
+        <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=30000" target="_blank">webgoto.com → Honda CR-V Hybrid imports</a>
       </div>
     </div>
   </div>
 
-  <!-- Next Steps -->
+  <!-- NEXT STEPS -->
   <div class="next-steps">
     <h2>➡️ Next Steps</h2>
     <ol>
-      <li>Open <strong>DoneDeal</strong> link above — may have listings scrapers missed</li>
-      <li>Check the <strong>Honda CR-V Hybrids</strong> (#1, #3, #6) — 2019 models but cheapest hybrids at €23,950–€28,950</li>
-      <li>Consider <strong>Mitsubishi Outlander PHEV</strong> as a stronger hybrid option (PHEV = plug-in, 45 km electric range)</li>
-      <li>Contact dealer about the <strong>Hyundai Tucson HEV</strong> in Cork — ask about Dublin delivery</li>
-      <li>Consider relaxing budget to <strong>€30,000</strong> or considering <strong>2019–2020</strong> models for more options</li>
-      <li>Check UK import dealers (Webgoto, Continental Cars Dublin) for German-imported CR-Vs</li>
-      <li>Re-run scrapers weekly — Irish car market turns over fast</li>
+      <li>Click <strong>View Features</strong> on any listing to see trim specs (heated seats, CarPlay, etc.)</li>
+      <li>Open <strong>DoneDeal</strong> link above — it may have listings scrapers missed</li>
+      <li>Compare <strong>Top 5</strong> against your must-have features</li>
+      <li>Consider <strong>budget to €30k</strong> and <strong>2019+</strong> for best CR-V and RAV4 options</li>
+      <li>Check import dealers (Webgoto, Continental Cars Dublin) for German-imported CR-Vs</li>
+      <li>Re-run scrapers weekly — market turns over fast</li>
     </ol>
   </div>
 
   <footer>
-    <p>car-finder · <a href="https://github.com/PrashanthHRao/car-finder" target="_blank">GitHub</a> · Deployed via GitHub Actions · Data from CarsIreland.ie</p>
+    <p>car-finder · <a href="https://github.com/PrashanthHRao/car-finder" target="_blank">GitHub</a> ·
+    Deployed via GitHub Actions · Data from CarsIreland.ie &amp; Carzone.ie</p>
   </footer>
-
 </div>
+
+<!-- FEATURES MODAL -->
+<div class="modal-overlay" id="featureModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+// ─── TRIM FEATURES DATABASE ────────────────────────────────────────────────
+// Source: Official OEM brochures and spec sheets
+const TRIMS = {
+  "Honda CR-V HYBRID EX 2019": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false, "Sunroof": false,
+    "Transmission": "e-CVT", "Drive": "FWD",
+    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  },
+  "Honda CR-V HYBRID EX MASTERPIECE 2019": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": true, "Sunroof": true,
+    "Memory Seats": true,
+    "Transmission": "e-CVT", "Drive": "FWD",
+    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  },
+  "Honda CR-V EX HYBRID 4WD 2020": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false, "Sunroof": false,
+    "Transmission": "e-CVT", "Drive": "AWD",
+    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  },
+  "Honda CR-V HYBRID 2021": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false,
+    "Transmission": "e-CVT", "Drive": "FWD",
+    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  },
+  "Honda CR-V 2.0 HEV 2WD Elegance 2020": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false,
+    "Transmission": "e-CVT", "Drive": "FWD",
+    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  },
+  "Honda CR-V HYBRID EX 4WD 2020": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false,
+    "Transmission": "e-CVT", "Drive": "AWD",
+    "Engine": "2.0L i-VTEC + 2 e-motors 135 kW", "Seats": 5
+  },
+  "Toyota RAV4 HYBRID X 2020": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Rear View Camera": true, "Rear Parking Sensors": true,
+    "Front Parking Sensors": false, "Blind Spot Monitoring": false,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false,
+    "Transmission": "e-CVT", "Drive": "FWD",
+    "Engine": "2.5L 4-cyl + e-motor 160 kW", "Seats": 5
+  },
+  "Toyota RAV4 HYBRID G 4WD 2020": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false, "Sunroof": true,
+    "Transmission": "e-CVT", "Drive": "AWD",
+    "Engine": "2.5L 4-cyl + e-motor 163 kW", "Seats": 5
+  },
+  "Hyundai Tucson COMFORT PLUS HEV 2023": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": false, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": false,
+    "Transmission": "6-speed auto (HEV)", "Drive": "FWD",
+    "Engine": "1.6L T-GDI + 44 kW e-motor 169 kW", "Seats": 5
+  },
+  "Mitsubishi Outlander PHEV 2019": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": false, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "7 Seats": true,
+    "EV Range": "~45 km",
+    "Transmission": "Single-speed EV", "Drive": "4WD",
+    "Engine": "2.4L 4-cyl + 2 e-motors 111 kW", "Seats": 7
+  },
+  "Mitsubishi Outlander BLACK EDITION PHEV 2021": {
+    "Heated Seats": true, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": false, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "7 Seats": true,
+    "EV Range": "~45 km", "Black Edition styling": true,
+    "Transmission": "Single-speed EV", "Drive": "4WD",
+    "Engine": "2.4L 4-cyl + 2 e-motors 111 kW", "Seats": 7
+  },
+  "Peugeot 3008 HYBRID2 PHEV 2021": {
+    "Heated Seats": "Optional", "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": "Optional",
+    "EV Range": "~59 km",
+    "Transmission": "8-speed auto (e-EAT8)", "Drive": "FWD",
+    "Engine": "1.6L + e-motor 165 kW", "Seats": 5
+  },
+  "Peugeot 3008 FL ALLURE 1.6 PHEV 2021": {
+    "Heated Seats": false, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
+    "Blind Spot Monitoring": false, "Rear View Camera": true,
+    "Front Parking Sensors": false, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": false,
+    "EV Range": "~50 km",
+    "Transmission": "8-speed auto (e-EAT8)", "Drive": "FWD",
+    "Engine": "1.6L + e-motor 165 kW", "Seats": 5
+  },
+  "Ford Kuga PHEV Titanium 2021": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true,
+    "EV Range": "~56 km",
+    "Transmission": "CVT (e-CVT)", "Drive": "FWD",
+    "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
+  },
+  "Ford Kuga VIGNALE 2.5 PHEV 2022": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Leather Seats": true, "Sunroof": true,
+    "EV Range": "~56 km",
+    "Transmission": "CVT (e-CVT)", "Drive": "FWD",
+    "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
+  },
+  "Ford Kuga Titanium 2.5phev225 2021": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true,
+    "EV Range": "~56 km",
+    "Transmission": "CVT (e-CVT)", "Drive": "FWD",
+    "Engine": "2.5L Atkinson + e-motor 168 kW", "Seats": 5
+  },
+  "Volvo XC40 T5 Twin Engine PHEV 2021": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "360 Camera": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Blind Spot Monitoring": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Pilot Assist": true,
+    "Lane Keep Assist": true, "Dual Zone Climate": true,
+    "EV Range": "~46 km",
+    "Transmission": "7-speed DCT", "Drive": "FWD",
+    "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
+  },
+  "Volvo XC40 T4 PHEV INSCRIPTION 2026": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
+    "360 Camera": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Blind Spot Monitoring": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Pilot Assist": true,
+    "Lane Keep Assist": true, "Dual Zone Climate": true,
+    "Leather Seats": true, "Sunroof": true, "Harman Kardon Audio": true,
+    "EV Range": "~46 km",
+    "Transmission": "7-speed DCT", "Drive": "FWD",
+    "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
+  },
+  "Mini Countryman COOPER S E ALL4 2021": {
+    "Heated Seats": "Optional", "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "Rear View Camera": true,
+    "Rear Parking Sensors": "Optional", "Blind Spot Monitoring": false,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": false, "Lane Keep Assist": false,
+    "Dual Zone Climate": true,
+    "EV Range": "~30 km",
+    "Transmission": "6-speed Steptronic", "Drive": "AWD",
+    "Engine": "1.5L 3-cyl + e-motor 164 kW", "Seats": 5
+  },
+  "Kia Sportage K4 PHEV 2022": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
+    "Blind Spot Monitoring": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true, "Sunroof": true,
+    "EV Range": "~55 km",
+    "Transmission": "6-speed auto (PHEV)", "Drive": "FWD",
+    "Engine": "1.6L T-GDI + e-motor 195 kW", "Seats": 5
+  },
+  "Renault Captur TECHNO E-TECH HYBRID 2024": {
+    "Heated Seats": false, "Heated Steering Wheel": false,
+    "Apple CarPlay": "Wireless", "Wireless CarPlay": true,
+    "Rear View Camera": true, "Rear Parking Sensors": true,
+    "Blind Spot Monitoring": false,
+    "Keyless Entry": true, "Power Tailgate": false,
+    "Adaptive Cruise Control": true, "Lane Keep Assist": true,
+    "Dual Zone Climate": true,
+    "Transmission": "Multi-mode auto", "Drive": "FWD",
+    "Engine": "1.6L + 2 e-motors 105 kW", "Seats": 5
+  },
+  "Volvo XC40 PHEV T5 Inscription 2021": {
+    "Heated Seats": true, "Heated Steering Wheel": true,
+    "Apple CarPlay": "Wired", "Wireless CarPlay": false,
+    "360 Camera": true, "Rear View Camera": true,
+    "Front Parking Sensors": true, "Rear Parking Sensors": true,
+    "Blind Spot Monitoring": true,
+    "Keyless Entry": true, "Power Tailgate": true,
+    "Adaptive Cruise Control": true, "Pilot Assist": true,
+    "Lane Keep Assist": true, "Dual Zone Climate": true,
+    "Leather Seats": true,
+    "EV Range": "~46 km",
+    "Transmission": "7-speed DCT", "Drive": "FWD",
+    "Engine": "1.5L 3-cyl + e-motor 194 kW", "Seats": 5
+  },
+};
+
+// ─── LISTING DATA ───────────────────────────────────────────────────────────
+const LISTINGS = [
+  // TOP 5
+  { "pos":1,"model":"Hyundai Tucson Comfort Plus HEV","price":"€27,750","km":"41,000 km","kmRaw":41000,"year":"2023","loc":"Cork","link":"https://www.carsireland.ie/4441671?journey=Search","source":"CarsIreland","trimKey":"Hyundai Tucson COMFORT PLUS HEV 2023","fuel":"HEV","why":"Newest, low km, full HEV, heated wheel" },
+  { "pos":2,"model":"Honda CR-V HYBRID EX","price":"€23,950","km":"45,000 km","kmRaw":45000,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4405957?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID EX 2019","fuel":"HEV","why":"Cheapest CR-V hybrid, e-CVT, low km" },
+  { "pos":3,"model":"Mitsubishi Outlander PHEV","price":"€23,950","km":"10,763 km","kmRaw":10763,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4432045?journey=Search","source":"CarsIreland","trimKey":"Mitsubishi Outlander PHEV 2019","fuel":"PHEV","why":"Insanely low km, PHEV with 45 km EV range, 7 seats" },
+  { "pos":4,"model":"Ford Kuga PHEV Titanium","price":"€25,995","km":"84,622 km","kmRaw":84622,"year":"2021","loc":"Kildare","link":"https://www.carsireland.ie/4121150?journey=FeaturedListing","source":"CarsIreland","trimKey":"Ford Kuga PHEV Titanium 2021","fuel":"PHEV","why":"2021, PHEV, heated wheel, good value" },
+  { "pos":5,"model":"Honda CR-V EX HYBRID 4WD","price":"€28,950","km":"61,000 km","kmRaw":61000,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4407145?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V EX HYBRID 4WD 2020","fuel":"HEV","why":"CR-V with AWD, e-CVT, 61k km" },
+
+  // ALL OTHER HYBRIDS
+  { "model":"Honda CR-V HYBRID EX MASTERPIECE","price":"€25,950","km":"74,000 km","kmRaw":74000,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4400362?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID EX MASTERPIECE 2019","fuel":"HEV" },
+  { "model":"Peugeot 3008 HYBRID2 PHEV Allure","price":"€20,950","km":"95,998 km","kmRaw":95998,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4439459?journey=Search","source":"CarsIreland","trimKey":"Peugeot 3008 HYBRID2 PHEV 2021","fuel":"PHEV" },
+  { "model":"Peugeot 3008 FL ALLURE 1.6 PHEV","price":"€20,950","km":"70,000 km","kmRaw":70000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4437023?journey=Search","source":"CarsIreland","trimKey":"Peugeot 3008 FL ALLURE 1.6 PHEV 2021","fuel":"PHEV" },
+  { "model":"Honda CR-V HYBRID","price":"€22,950","km":"84,000 km","kmRaw":84000,"year":"2018","loc":"Dublin","link":"https://www.carsireland.ie/4432457?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
+  { "model":"Mitsubishi Outlander BLACK EDITION PHEV","price":"€27,950","km":"45,000 km","kmRaw":45000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4434535?journey=Search","source":"CarsIreland","trimKey":"Mitsubishi Outlander BLACK EDITION PHEV 2021","fuel":"PHEV" },
+  { "model":"Volvo XC40 T5 Twin Engine PHEV Inscription","price":"€27,999","km":"93,000 km","kmRaw":93000,"year":"2021","loc":"Cork","link":"https://www.carsireland.ie/4427828?journey=Search","source":"CarsIreland","trimKey":"Volvo XC40 T5 Twin Engine PHEV 2021","fuel":"PHEV" },
+  { "model":"Toyota RAV4 2.5 Hybrid Automatic","price":"€28,500","km":"41,429 km","kmRaw":41429,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4433849?journey=FeaturedListing","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID X 2020","fuel":"HEV" },
+  { "model":"Ford Kuga Titanium 2.5 PHEV 225","price":"€28,945","km":"41,000 km","kmRaw":41000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4441260?journey=Search","source":"CarsIreland","trimKey":"Ford Kuga Titanium 2.5phev225 2021","fuel":"PHEV" },
+  { "model":"Honda CR-V HYBRID","price":"€28,950","km":"94,000 km","kmRaw":94000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4406221?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID X","price":"€28,950","km":"79,000 km","kmRaw":79000,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4436634?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID X 2020","fuel":"HEV" },
+  { "model":"Honda CR-V 2.0 HEV Elegance","price":"€29,850","km":"80,978 km","kmRaw":80978,"year":"2021","loc":"Limerick","link":"https://www.carsireland.ie/4380408?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V 2.0 HEV 2WD Elegance 2020","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€29,950","km":"83,963 km","kmRaw":83963,"year":"2019","loc":"Dublin","link":"https://www.carsireland.ie/4442310?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€29,950","km":"81,000 km","kmRaw":81000,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4434572?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { "model":"Volvo XC40 T4 PHEV INSCRIPTION","price":"€29,950","km":"79,000 km","kmRaw":79000,"year":"2026","loc":"Dublin","link":"https://www.carsireland.ie/4367468?journey=Search","source":"CarsIreland","trimKey":"Volvo XC40 T4 PHEV INSCRIPTION 2026","fuel":"PHEV" },
+  { "model":"Mini Countryman COOPER S E ALL4","price":"€29,950","km":"69,274 km","kmRaw":69274,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4430254?journey=Search","source":"CarsIreland","trimKey":"Mini Countryman COOPER S E ALL4 2021","fuel":"PHEV" },
+  { "model":"Ford Kuga VIGNALE 2.5 PHEV","price":"€31,250","km":"42,447 km","kmRaw":42447,"year":"2022","loc":"Dublin","link":"https://www.carsireland.ie/4438378?journey=Search","source":"CarsIreland","trimKey":"Ford Kuga VIGNALE 2.5 PHEV 2022","fuel":"PHEV" },
+  { "model":"Honda CR-V HYBRID","price":"€31,950","km":"75,000 km","kmRaw":75000,"year":"2022","loc":"Dublin","link":"https://www.carsireland.ie/4435121?journey=Search","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€31,950","km":"91,249 km","kmRaw":91249,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4441146?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { "model":"Kia Sportage K4 PHEV","price":"€33,945","km":"78,500 km","kmRaw":78500,"year":"2022","loc":"Dublin","link":"https://www.carsireland.ie/4441259?journey=Search","source":"CarsIreland","trimKey":"Kia Sportage K4 PHEV 2022","fuel":"PHEV" },
+  { "model":"Renault Captur E-TECH HYBRID","price":"€23,992","km":"53,290 km","kmRaw":53290,"year":"2024","loc":"Dublin","link":"https://www.carzone.ie/used-cars/renault/captur/fpa/4362278","source":"Carzone","trimKey":"Renault Captur TECHNO E-TECH HYBRID 2024","fuel":"HEV" },
+  { "model":"Honda CR-V HYBRID","price":"€29,900","km":"66,762 km","kmRaw":66762,"year":"2021","loc":"Clare","link":"https://www.carsireland.ie/4265913?journey=FeaturedListing","source":"CarsIreland","trimKey":"Honda CR-V HYBRID 2021","fuel":"HEV" },
+  { "model":"Volvo XC40 PHEV T5 Inscription","price":"€30,950","km":"98,998 km","kmRaw":98998,"year":"2021","loc":"Cork","link":"https://www.carsireland.ie/4441017?journey=Search","source":"CarsIreland","trimKey":"Volvo XC40 PHEV T5 Inscription 2021","fuel":"PHEV" },
+  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€30,950","km":"99,291 km","kmRaw":99291,"year":"2020","loc":"Dublin","link":"https://www.carsireland.ie/4441170?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€30,950","km":"78,000 km","kmRaw":78000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4436614?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID","price":"€30,950","km":"41,000 km","kmRaw":41000,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4436621?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+  { "model":"Toyota RAV4 HYBRID G 4WD","price":"€31,950","km":"70,106 km","kmRaw":70106,"year":"2021","loc":"Dublin","link":"https://www.carsireland.ie/4442318?journey=Search","source":"CarsIreland","trimKey":"Toyota RAV4 HYBRID G 4WD 2020","fuel":"HEV" },
+];
+
+// ─── RENDER ─────────────────────────────────────────────────────────────────
+const NOW = new Date();
+
+document.getElementById('scrapeDate').textContent = NOW.toLocaleString('en-IE', {
+  day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+});
+document.getElementById('totalCount').textContent = LISTINGS.length;
+
+function fmtFuel(f) {
+  const cls = f === 'PHEV' ? 'phev' : 'hybrid';
+  return `<span class="fuel-badge ${cls}">${f}</span>`;
+}
+
+function fmtSource(s) {
+  const cls = s === 'CarsIreland' ? 'ci' : s === 'Carzone' ? 'cz' : 'dd';
+  return `<span class="source-badge ${cls}">${s}</span>`;
+}
+
+function renderCard(l) {
+  const top5 = l.pos ? l.pos <= 5 : false;
+  const hasTrim = l.trimKey && TRIMS[l.trimKey];
+  return `
+    <div class="l-card">
+      <div class="pos">${top5 ? '#' + l.pos : ''}</div>
+      <div class="info">
+        <div class="title">${l.model}</div>
+        <div class="sub">${l.year} &middot; ${l.loc} &middot; ${fmtSource(l.source)} ${fmtFuel(l.fuel)}</div>
+      </div>
+      <div class="specs">
+        <span>💰 <strong>${l.price}</strong></span>
+        <span>📏 <strong>${l.km}</strong></span>
+      </div>
+      <div class="actions">
+        ${hasTrim ? `<button class="btn" onclick="showFeatures('${l.trimKey}','${l.model.replace(/'/g,"\\'")}')">🔍 Features</button>` : ''}
+        <a class="btn primary" href="${l.link}" target="_blank">View ↗</a>
+      </div>
+      ${l.why ? `<div style="width:100%;font-size:.8rem;color:var(--warn);margin-top:.25rem;">⭐ ${l.why}</div>` : ''}
+    </div>`;
+}
+
+// Render top 5
+document.getElementById('top5').innerHTML = LISTINGS.filter(l => l.pos && l.pos <= 5)
+  .sort((a, b) => a.pos - b.pos)
+  .map(renderCard).join('');
+
+// Render others
+document.getElementById('otherHybrids').innerHTML = LISTINGS.filter(l => !l.pos || l.pos > 5)
+  .map((l, i) => renderCard({ ...l, pos: i + 6 })).join('');
+
+// ─── FEATURES MODAL ─────────────────────────────────────────────────────────
+function showFeatures(trimKey, modelName) {
+  const trim = TRIMS[trimKey];
+  if (!trim) return;
+  const keys = Object.keys(trim);
+  // Sort: must-have features first
+  const priority = ['Heated Seats','Heated Steering Wheel','Wireless CarPlay','Apple CarPlay','Blind Spot Monitoring','Rear View Camera','Front Parking Sensors','Rear Parking Sensors','Keyless Entry','Power Tailgate','Adaptive Cruise Control','Lane Keep Assist','360 Camera','Sunroof','Leather Seats','Dual Zone Climate','7 Seats','EV Range','Transmission','Drive','Engine','Seats','Memory Seats','Harman Kardon Audio','Black Edition styling'];
+  const sorted = keys.sort((a, b) => {
+    const ia = priority.indexOf(a), ib = priority.indexOf(b);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
+
+  let rows = sorted.map(k => {
+    let v = trim[k];
+    let icon = '';
+    if (v === true) { icon = '<span class="feat-yes">✔</span>'; v = 'Yes'; }
+    else if (v === false) { icon = '<span class="feat-no">✘</span>'; v = 'No'; }
+    else if (v === 'Optional') { icon = '<span class="feat-opt">●</span>'; }
+    else { icon = '·'; }
+    return `<tr><td>${k}</td><td>${icon} ${v}</td></tr>`;
+  }).join('');
+
+  document.getElementById('modalContent').innerHTML = `
+    <h2>${modelName}</h2>
+    <div class="sub">Trim: ${trimKey}</div>
+    <table>${rows}</table>
+  `;
+  document.getElementById('featureModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('featureModal').classList.remove('open');
+}
+
+document.getElementById('featureModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('featureModal')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
 </body>
 </html>
