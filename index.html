@@ -354,6 +354,12 @@ body {
     <span id="scrapedAt" style="font-size:0.75rem;color:var(--md-on-surface-variant)"></span>
   </div>
 
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px;font-size:0.75rem;color:var(--md-on-surface-variant)">
+    <span><span class="rel-badge rel-a" style="width:18px;height:18px;font-size:0.6rem">A</span> Excellent reliability</span>
+    <span><span class="rel-badge rel-b" style="width:18px;height:18px;font-size:0.6rem">B</span> Good reliability</span>
+    <span><span class="rel-badge rel-c" style="width:18px;height:18px;font-size:0.6rem">C</span> Below average</span>
+  </div>
+
   <div id="listingsContainer"></div>
 
   <!-- Trim Feature Modal -->
@@ -1011,7 +1017,7 @@ let activeListings = [...LISTINGS];
 function getRelHTML(brand) {
   const r = MODEL_RELIABILITY[brand];
   if (!r) return '';
-  return `<span class="rel-badge rel-${r.rating.toLowerCase()}">${r.rating}</span>`;
+  return `<span class="rel-badge rel-${r.rating.toLowerCase()}" title="${r.summary}">${r.rating}</span>`;
 }
 
 function featureIcon(val) {
