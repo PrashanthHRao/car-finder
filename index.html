@@ -14,7 +14,11 @@
       --accent: #22c55e;
       --warn: #f59e0b;
       --danger: #ef4444;
-      --primary: #3b82f6;
+      --primary: #22d3ee;
+      --hybrid: #22c55e;
+      --phev: #8b5cf6;
+      --petrol: #f59e0b;
+      --diesel: #ef4444;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -24,7 +28,9 @@
       line-height: 1.6;
       padding: 2rem;
     }
-    .container { max-width: 960px; margin: 0 auto; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    a { color: var(--primary); text-decoration: underline; text-underline-offset: 2px; }
+    a:hover { color: #67e8f9; }
 
     h1 { font-size: 2rem; margin-bottom: .25rem; }
     h1 small { font-size: 1rem; color: var(--muted); font-weight: 400; }
@@ -40,14 +46,19 @@
       padding: .35rem .85rem; border-radius: 20px;
       font-size: .85rem; font-weight: 500;
     }
+    .filters .tag.strict { color: var(--warn); background: #3b2f1a; }
+    .filters .tag.relaxed { color: var(--accent); background: #1a3b1a; }
 
     h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
     h2 .badge {
       font-size: .7rem; padding: .15rem .6rem; border-radius: 10px;
       color: #fff; font-weight: 600;
     }
-    .badge.match { background: var(--accent); }
-    .badge.none { background: var(--danger); }
+    .badge.hybrid { background: var(--hybrid); }
+    .badge.phev { background: var(--phev); }
+    .badge.petrol { background: var(--petrol); }
+    .badge.diesel { background: var(--danger); }
+    .badge.unknown { background: var(--muted); }
 
     .card {
       background: var(--card); border: 1px solid var(--border);
@@ -62,17 +73,27 @@
     .card-details { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .9rem; margin-bottom: .75rem; }
     .card-details span { display: flex; align-items: center; gap: .3rem; }
     .card-details strong { color: var(--text); font-weight: 500; }
-    .card-link { color: var(--primary); font-size: .85rem; word-break: break-all; }
-    .card-link:hover { text-decoration: underline; }
+    .card-link { font-size: .85rem; word-break: break-all; margin-top: .25rem; }
     .card-note { margin-top: .5rem; font-size: .85rem; color: var(--warn); }
 
-    table {
-      width: 100%; border-collapse: collapse; margin-top: .75rem;
-      font-size: .9rem;
+    .fuel-badge {
+      display: inline-block; padding: .15rem .5rem; border-radius: 6px;
+      font-size: .75rem; font-weight: 600; color: #fff;
     }
-    th, td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--border); }
-    th { color: var(--muted); font-weight: 500; font-size: .8rem; text-transform: uppercase; }
-    td:first-child { font-weight: 600; }
+    .fuel-badge.hybrid { background: var(--hybrid); }
+    .fuel-badge.phev { background: var(--phev); }
+    .fuel-badge.petrol { background: var(--petrol); }
+    .fuel-badge.diesel { background: var(--danger); }
+    .fuel-badge.unknown { background: #475569; }
+
+    table {
+      width: 100%; border-collapse: collapse; font-size: .85rem;
+    }
+    th, td { text-align: left; padding: .65rem .5rem; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 500; font-size: .75rem; text-transform: uppercase; position: sticky; top: 0; background: var(--bg); }
+    tr:hover td { background: rgba(255,255,255,.03); }
+    td:first-child { font-weight: 600; white-space: nowrap; }
+    td .link-icon { opacity: .5; }
 
     .site-status { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
     .site-status .site {
@@ -88,12 +109,16 @@
     .next-steps { margin-top: 2rem; }
     .next-steps ol { padding-left: 1.25rem; color: var(--muted); }
     .next-steps li { margin-bottom: .5rem; }
-    .next-steps a { color: var(--primary); }
+
+    .search-links { display: flex; flex-direction: column; gap: .75rem; font-size: .85rem; }
 
     footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .85rem; text-align: center; }
+
     @media (max-width: 600px) {
       body { padding: 1rem; }
       .card-header { flex-direction: column; gap: .5rem; }
+      table { font-size: .75rem; }
+      th, td { padding: .4rem .3rem; }
     }
   </style>
 </head>
@@ -101,16 +126,18 @@
 <div class="container">
 
   <h1>Hybrid SUV Finder <small>🇮🇪 Ireland</small></h1>
-  <p class="subtitle">Searching Carzone, CarsIreland &amp; DoneDeal for the best hybrid SUV deals</p>
+  <p class="subtitle">Scraping Carzone, CarsIreland &amp; DoneDeal — updated June 2026</p>
 
   <!-- Filters -->
   <div class="filters">
-    <span class="tag">💰 €0 – €28,000</span>
-    <span class="tag">📏 &lt; 70,000 km</span>
-    <span class="tag">📅 2021+</span>
-    <span class="tag">⛽ Hybrid</span>
+    <span class="tag strict">💰 €0 – €28k (strict)</span>
+    <span class="tag relaxed">💰 Up to €30k (relaxed)</span>
+    <span class="tag strict">📏 &lt; 70k km</span>
+    <span class="tag relaxed">📏 Up to 80k km</span>
+    <span class="tag strict">📅 2021+</span>
+    <span class="tag relaxed">📅 2019+</span>
+    <span class="tag">⛽ Hybrid / PHEV</span>
     <span class="tag">⚙ Automatic</span>
-    <span class="tag">📍 Dublin / Ireland</span>
   </div>
 
   <!-- Site Status -->
@@ -118,11 +145,11 @@
     <div class="site"><span class="dot green"></span> Carzone.ie</div>
     <div class="site"><span class="dot green"></span> CarsIreland.ie</div>
     <div class="site"><span class="dot red"></span> DoneDeal.ie <small style="color:#94a3b8">(Cloudflare)</small></div>
-    <div class="site"><span class="dot red"></span> AutoTrader.ie <small style="color:#94a3b8">(network block)</small></div>
+    <div class="site"><span class="dot red"></span> AutoTrader.ie <small style="color:#94a3b8">(blocked)</small></div>
   </div>
 
   <!-- Best Match -->
-  <h2>🏆 Best Match <span class="badge match">FOUND</span></h2>
+  <h2>🏆 Top Pick <span class="badge hybrid">HYBRID</span></h2>
   <div class="card highlight">
     <div class="card-header">
       <div>
@@ -135,63 +162,111 @@
       <span>📏 <strong>41,000 km</strong></span>
       <span>📅 <strong>2023</strong> (231 reg)</span>
       <span>📍 <strong>Cork</strong></span>
-      <span>⛽ <strong>Petrol Hybrid</strong></span>
-      <span>🎨 <strong>Grey</strong></span>
-      <span>💰 <strong>€518/mo</strong> (HP est.)</span>
+      <span>⛽ <span class="fuel-badge hybrid">HEV</span></span>
+      <span>🎨 Grey</span>
     </div>
     <div class="card-link">🔗 <a href="https://www.carsireland.ie/4441671?journey=Search" target="_blank">carsireland.ie/4441671</a></div>
-    <div class="card-note">⚠️ Only solid match found across all Irish car sites within criteria. Delivered to Cork — inquire about Dublin delivery.</div>
+    <div class="card-note">⚠️ Only car meeting strict criteria (2021+, &lt;70k km, €28k). In Cork — ask about Dublin delivery.</div>
   </div>
 
-  <!-- Near Misses -->
-  <h2>📋 Near Misses</h2>
+  <!-- All Confirmed Hybrids (Relaxed) -->
+  <h2>⚡ All Confirmed Hybrids Found <span class="badge hybrid">7</span></h2>
   <table>
     <thead>
-      <tr><th>Model</th><th>Price</th><th>KM</th><th>Year</th><th>Issue</th></tr>
+      <tr><th>#</th><th>Model</th><th>Fuel</th><th>Price</th><th>KM</th><th>Year</th><th>Location</th><th></th></tr>
     </thead>
     <tbody>
-      <tr><td>Kia Sportage K3</td><td>€19,950</td><td>68,319</td><td>2019</td><td>Too old (2019), petrol only</td></tr>
-      <tr><td>Toyota RAV4 D-4D</td><td>€14,950</td><td>12,000</td><td>2026</td><td>Diesel, not hybrid</td></tr>
-      <tr><td>Honda CR-V 2.0HEV Comfort</td><td>€25,995</td><td>114,998</td><td>2019</td><td>Over mileage, too old</td></tr>
-      <tr><td>Honda CR-V 2.0 HEV Elegance</td><td>€27,995</td><td>100,998</td><td>2019</td><td>Over mileage, too old</td></tr>
+      <tr>
+        <td>1</td><td>Honda CR-V HYBRID EX</td>
+        <td><span class="fuel-badge hybrid">HEV</span></td>
+        <td>€23,950</td><td>45,000</td><td>2019</td><td>Dublin</td>
+        <td><a href="https://www.carsireland.ie/4405957?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
+      <tr>
+        <td>2</td><td>Mitsubishi Outlander PHEV</td>
+        <td><span class="fuel-badge phev">PHEV</span></td>
+        <td>€23,950</td><td>10,763</td><td>2019</td><td>Dublin</td>
+        <td><a href="https://www.carsireland.ie/4432045?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
+      <tr>
+        <td>3</td><td>Honda CR-V HYBRID EX MASTERPIECE</td>
+        <td><span class="fuel-badge hybrid">HEV</span></td>
+        <td>€25,950</td><td>74,000</td><td>2019</td><td>Dublin</td>
+        <td><a href="https://www.carsireland.ie/4400362?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
+      <tr>
+        <td>4</td><td>Hyundai Tucson Comfort Plus HEV</td>
+        <td><span class="fuel-badge hybrid">HEV</span></td>
+        <td>€27,750</td><td>41,000</td><td>2023</td><td>Cork</td>
+        <td><a href="https://www.carsireland.ie/4441671?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
+      <tr>
+        <td>5</td><td>Mitsubishi Outlander BLACK EDITION PHEV</td>
+        <td><span class="fuel-badge phev">PHEV</span></td>
+        <td>€27,950</td><td>45,000</td><td>2021</td><td>Dublin</td>
+        <td><a href="https://www.carsireland.ie/4434535?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
+      <tr>
+        <td>6</td><td>Honda CR-V EX HYBRID 4WD</td>
+        <td><span class="fuel-badge hybrid">HEV</span></td>
+        <td>€28,950</td><td>61,000</td><td>2020</td><td>Dublin</td>
+        <td><a href="https://www.carsireland.ie/4407145?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
+      <tr>
+        <td>7</td><td>Toyota RAV4 HYBRID X</td>
+        <td><span class="fuel-badge hybrid">HEV</span></td>
+        <td>€28,950</td><td>79,000</td><td>2020</td><td>Dublin</td>
+        <td><a href="https://www.carsireland.ie/4436634?journey=Search" target="_blank" class="link-icon">↗</a></td>
+      </tr>
     </tbody>
   </table>
 
-  <!-- Results per model -->
-  <h2 style="margin-top:2rem;">📊 Results by Model</h2>
+  <!-- All Listings with Relaxed Criteria -->
+  <h2 style="margin-top:2rem;">📋 All Listings (Relaxed: €30k / 80k km / 2019+)</h2>
   <table>
     <thead>
-      <tr><th>Model</th><th>Status</th><th>Best Found</th></tr>
+      <tr><th>#</th><th>Model</th><th>Fuel</th><th>Price</th><th>KM</th><th>Year</th><th>Location</th><th></th></tr>
     </thead>
     <tbody>
-      <tr><td>Honda CR-V Hybrid</td><td style="color:var(--danger)">❌ Not found</td><td>Cheapest: €25,995 (114k km, 2019)</td></tr>
-      <tr><td>Toyota RAV4 Hybrid</td><td style="color:var(--danger)">❌ Not found</td><td>Cheapest: €29,950 (83k km) — over budget</td></tr>
-      <tr><td>Nissan X-Trail e-Power</td><td style="color:var(--danger)">❌ Not found</td><td>Cheapest: €36,950 (27k km) — over budget</td></tr>
-      <tr><td>Kia Sportage Hybrid</td><td style="color:var(--warn)">⚠️ Partial</td><td>€23,450 (74k km) — MHEV, too old</td></tr>
-      <tr><td style="font-weight:700;color:var(--accent)">Hyundai Tucson HEV</td><td style="color:var(--accent)">✅ Found!</td><td>€27,750 (41k km, 2023) — in budget!</td></tr>
+      <tr><td>1</td><td>Toyota RAV4 D-4D Luna Sport</td><td><span class="fuel-badge diesel">Diesel</span></td><td>€14,950</td><td>12,000</td><td>2026</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4439274?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>2</td><td>Kia Sportage K3</td><td><span class="fuel-badge unknown">?</span></td><td>€19,950</td><td>68,319</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4444647?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>3</td><td>Nissan X-Trail 1.7 SV Premium</td><td><span class="fuel-badge unknown">?</span></td><td>€23,945</td><td>73,834</td><td>2019</td><td>Kildare</td><td><a href="https://www.carsireland.ie/4438137?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>4</td><td>Honda CR-V EX Masterpiece</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€23,950</td><td>32,000</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4410057?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(34,197,94,.05);"><td>5</td><td><strong>Honda CR-V HYBRID EX</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€23,950</strong></td><td><strong>45,000</strong></td><td><strong>2019</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4405957?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>6</td><td>Nissan X-Trail 1.3 PET SV DCT</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€23,950</td><td>77,000</td><td>??</td><td>Limerick</td><td><a href="https://www.carsireland.ie/4439740?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(139,92,246,.05);"><td>7</td><td><strong>Mitsubishi Outlander PHEV</strong></td><td><span class="fuel-badge phev">PHEV</span></td><td><strong>€23,950</strong></td><td><strong>10,763</strong></td><td><strong>2019</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4432045?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>8</td><td>Honda CR-V EX Masterpiece</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€24,950</td><td>80,000</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4409880?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>9</td><td>Honda CR-V EX Masterpiece</td><td><span class="fuel-badge petrol">Petrol</span></td><td>€24,950</td><td>67,000</td><td>2019</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4407495?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(34,197,94,.05);"><td>10</td><td><strong>Honda CR-V HYBRID EX Masterpiece</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€25,950</strong></td><td><strong>74,000</strong></td><td><strong>2019</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4400362?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(34,197,94,.08);"><td>11</td><td><strong>Hyundai Tucson Comfort Plus HEV</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€27,750</strong></td><td><strong>41,000</strong></td><td><strong>2023</strong></td><td><strong>Cork</strong></td><td><a href="https://www.carsireland.ie/4441671?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(139,92,246,.05);"><td>12</td><td><strong>Mitsubishi Outlander BLACK EDITION PHEV</strong></td><td><span class="fuel-badge phev">PHEV</span></td><td><strong>€27,950</strong></td><td><strong>45,000</strong></td><td><strong>2021</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4434535?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(34,197,94,.05);"><td>13</td><td><strong>Honda CR-V EX HYBRID 4WD</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€28,950</strong></td><td><strong>61,000</strong></td><td><strong>2020</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4407145?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr style="background: rgba(34,197,94,.05);"><td>14</td><td><strong>Toyota RAV4 HYBRID X</strong></td><td><span class="fuel-badge hybrid">HEV</span></td><td><strong>€28,950</strong></td><td><strong>79,000</strong></td><td><strong>2020</strong></td><td><strong>Dublin</strong></td><td><a href="https://www.carsireland.ie/4436634?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>15</td><td>Hyundai Tucson IX35 Executive</td><td><span class="fuel-badge unknown">?</span></td><td>€28,950</td><td>53,000</td><td>2023</td><td>Wexford</td><td><a href="https://www.carsireland.ie/4441599?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
+      <tr><td>16</td><td>Hyundai Tucson IX35 Executive</td><td><span class="fuel-badge unknown">?</span></td><td>€28,950</td><td>37,588</td><td>2022</td><td>Dublin</td><td><a href="https://www.carsireland.ie/4439329?journey=Search" target="_blank" class="link-icon">↗</a></td></tr>
     </tbody>
   </table>
 
   <!-- Manual Search Links -->
   <div class="card" style="margin-top:1.5rem;">
     <h2 style="margin-bottom:.5rem;font-size:1.1rem;">🔍 Manual Search Links</h2>
-    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Open these in your browser (some block automation):</p>
-    <div style="font-size:.85rem; display:flex; flex-direction:column; gap:.75rem;">
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Open these in your browser — DoneDeal blocks scrapers:</p>
+    <div class="search-links">
       <div>
         <strong>DoneDeal</strong> — SUV, Hybrid, €20k–€28k, &lt;70k km, 2021+<br>
-        <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=28000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank" style="color:var(--primary);">donedeal.ie/cars/SUV-4x4-and-Pick-up/… →</a>
+        <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=28000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank">donedeal.ie/cars/SUV-4x4-and-Pick-up/…</a>
       </div>
       <div>
-        <strong>Carzone</strong> — Hybrid, €0–€28k, &lt;70k km<br>
-        <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-28000&mileage=0-70000" target="_blank" style="color:var(--primary);">carzone.ie/used-cars?fuel-type=HYBRID&… →</a>
+        <strong>Carzone</strong> — Hybrid, Automatic, €0–€28k, &lt;70k km<br>
+        <a href="https://www.carzone.ie/used-cars?sort=price&fuel-type=HYBRID&transmission=AUTOMATIC&price=0-28000&mileage=0-70000" target="_blank">carzone.ie/used-cars?fuel-type=HYBRID&…</a>
       </div>
       <div>
-        <strong>CarsIreland</strong> — Hybrid, up to €28k<br>
-        <a href="https://www.carsireland.ie/used-cars?" target="_blank" style="color:var(--primary);">carsireland.ie/used-cars (post-filter) →</a>
+        <strong>CarsIreland</strong> — All makes, then filter by fuel/price<br>
+        <a href="https://www.carsireland.ie/used-cars?" target="_blank">carsireland.ie/used-cars (post-filter)</a>
       </div>
       <div>
         <strong>Webgoto</strong> — Import dealers (UK/German imports)<br>
-        <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=28000" target="_blank" style="color:var(--primary);">webgoto.com →</a>
+        <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=28000" target="_blank">webgoto.com → Honda CR-V Hybrid import search</a>
       </div>
     </div>
   </div>
@@ -200,16 +275,18 @@
   <div class="next-steps">
     <h2>➡️ Next Steps</h2>
     <ol>
-      <li>Open the <strong>DoneDeal</strong> link above in your browser — it may have listings the scrapers couldn't reach</li>
-      <li>Contact dealers about the <strong>Hyundai Tucson HEV</strong> in Cork — ask about Dublin delivery</li>
-      <li>Consider relaxing budget to <strong>€30,000</strong> to open up CR-V and RAV4 options</li>
-      <li>Check UK import dealers Webgotocar and Continental Cars Dublin for German-imported CR-Vs</li>
+      <li>Open <strong>DoneDeal</strong> link above — may have listings scrapers missed</li>
+      <li>Check the <strong>Honda CR-V Hybrids</strong> (#1, #3, #6) — 2019 models but cheapest hybrids at €23,950–€28,950</li>
+      <li>Consider <strong>Mitsubishi Outlander PHEV</strong> as a stronger hybrid option (PHEV = plug-in, 45 km electric range)</li>
+      <li>Contact dealer about the <strong>Hyundai Tucson HEV</strong> in Cork — ask about Dublin delivery</li>
+      <li>Consider relaxing budget to <strong>€30,000</strong> or considering <strong>2019–2020</strong> models for more options</li>
+      <li>Check UK import dealers (Webgoto, Continental Cars Dublin) for German-imported CR-Vs</li>
       <li>Re-run scrapers weekly — Irish car market turns over fast</li>
     </ol>
   </div>
 
   <footer>
-    <p>car-finder · <a href="https://github.com/PrashanthHRao/car-finder" target="_blank" style="color:var(--primary);">GitHub</a> · Deployed via GitHub Actions</p>
+    <p>car-finder · <a href="https://github.com/PrashanthHRao/car-finder" target="_blank">GitHub</a> · Deployed via GitHub Actions · Data from CarsIreland.ie</p>
   </footer>
 
 </div>
