@@ -1,0 +1,13 @@
+{
+  "name": "car-finder",
+  "version": "1.0.0",
+  "description": "Hybrid SUV finder for Irish market — scrapes Carzone, CarsIreland, DoneDeal",
+  "scripts": {
+    "scrape:carzone": "node scrape_carzone.js",
+    "scrape:carsireland": "node scrape_carsireland.js",
+    "scrape:all": "node scrape_all.js"
+  },
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid SUV Finder — Ireland</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --accent: #22c55e;
+      --warn: #f59e0b;
+      --danger: #ef4444;
+      --primary: #3b82f6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 2rem;
+    }
+    .container { max-width: 960px; margin: 0 auto; }
+
+    h1 { font-size: 2rem; margin-bottom: .25rem; }
+    h1 small { font-size: 1rem; color: var(--muted); font-weight: 400; }
+    .subtitle { color: var(--muted); margin-bottom: 2rem; }
+
+    .filters {
+      display: flex; flex-wrap: wrap; gap: .75rem;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem; margin-bottom: 2rem;
+    }
+    .filters .tag {
+      background: #1f3a4b; color: var(--primary);
+      padding: .35rem .85rem; border-radius: 20px;
+      font-size: .85rem; font-weight: 500;
+    }
+
+    h2 { font-size: 1.35rem; margin-bottom: 1rem; display: flex; align-items: center; gap: .5rem; }
+    h2 .badge {
+      font-size: .7rem; padding: .15rem .6rem; border-radius: 10px;
+      color: #fff; font-weight: 600;
+    }
+    .badge.match { background: var(--accent); }
+    .badge.none { background: var(--danger); }
+
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
+    }
+    .card.highlight {
+      border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent);
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: .5rem; }
+    .card-title { font-size: 1.1rem; font-weight: 600; }
+    .card-price { font-size: 1.4rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+    .card-details { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; color: var(--muted); font-size: .9rem; margin-bottom: .75rem; }
+    .card-details span { display: flex; align-items: center; gap: .3rem; }
+    .card-details strong { color: var(--text); font-weight: 500; }
+    .card-link { color: var(--primary); font-size: .85rem; word-break: break-all; }
+    .card-link:hover { text-decoration: underline; }
+    .card-note { margin-top: .5rem; font-size: .85rem; color: var(--warn); }
+
+    table {
+      width: 100%; border-collapse: collapse; margin-top: .75rem;
+      font-size: .9rem;
+    }
+    th, td { text-align: left; padding: .6rem .5rem; border-bottom: 1px solid var(--border); }
+    th { color: var(--muted); font-weight: 500; font-size: .8rem; text-transform: uppercase; }
+    td:first-child { font-weight: 600; }
+
+    .site-status { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1.5rem 0; }
+    .site-status .site {
+      display: flex; align-items: center; gap: .5rem;
+      padding: .5rem 1rem; border-radius: 8px;
+      background: var(--card); border: 1px solid var(--border); font-size: .85rem;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .dot.green { background: var(--accent); }
+    .dot.red { background: var(--danger); }
+    .dot.yellow { background: var(--warn); }
+
+    .next-steps { margin-top: 2rem; }
+    .next-steps ol { padding-left: 1.25rem; color: var(--muted); }
+    .next-steps li { margin-bottom: .5rem; }
+    .next-steps a { color: var(--primary); }
+
+    footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--muted); font-size: .85rem; text-align: center; }
+    @media (max-width: 600px) {
+      body { padding: 1rem; }
+      .card-header { flex-direction: column; gap: .5rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Hybrid SUV Finder <small>🇮🇪 Ireland</small></h1>
+  <p class="subtitle">Searching Carzone, CarsIreland &amp; DoneDeal for the best hybrid SUV deals</p>
+
+  <!-- Filters -->
+  <div class="filters">
+    <span class="tag">💰 €0 – €28,000</span>
+    <span class="tag">📏 &lt; 70,000 km</span>
+    <span class="tag">📅 2021+</span>
+    <span class="tag">⛽ Hybrid</span>
+    <span class="tag">⚙ Automatic</span>
+    <span class="tag">📍 Dublin / Ireland</span>
+  </div>
+
+  <!-- Site Status -->
+  <div class="site-status">
+    <div class="site"><span class="dot green"></span> Carzone.ie</div>
+    <div class="site"><span class="dot green"></span> CarsIreland.ie</div>
+    <div class="site"><span class="dot red"></span> DoneDeal.ie <small style="color:#94a3b8">(Cloudflare)</small></div>
+    <div class="site"><span class="dot red"></span> AutoTrader.ie <small style="color:#94a3b8">(network block)</small></div>
+  </div>
+
+  <!-- Best Match -->
+  <h2>🏆 Best Match <span class="badge match">FOUND</span></h2>
+  <div class="card highlight">
+    <div class="card-header">
+      <div>
+        <div class="card-title">Hyundai Tucson Comfort Plus HEV</div>
+        <div style="color: var(--muted); font-size: .85rem;">Full Hybrid · 1.6 T-GDI + 44 kW electric · 6-speed auto</div>
+      </div>
+      <div class="card-price">€27,750</div>
+    </div>
+    <div class="card-details">
+      <span>📏 <strong>41,000 km</strong></span>
+      <span>📅 <strong>2023</strong> (231 reg)</span>
+      <span>📍 <strong>Cork</strong></span>
+      <span>⛽ <strong>Petrol Hybrid</strong></span>
+      <span>🎨 <strong>Grey</strong></span>
+      <span>💰 <strong>€518/mo</strong> (HP est.)</span>
+    </div>
+    <div class="card-link">🔗 <a href="https://www.carsireland.ie/used-cars/hyundai/tucson" target="_blank">carsireland.ie/used-cars/hyundai/tucson</a></div>
+    <div class="card-note">⚠️ Only solid match found across all Irish car sites within criteria. Delivered to Cork — inquire about Dublin delivery.</div>
+  </div>
+
+  <!-- Near Misses -->
+  <h2>📋 Near Misses</h2>
+  <table>
+    <thead>
+      <tr><th>Model</th><th>Price</th><th>KM</th><th>Year</th><th>Issue</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Kia Sportage K3</td><td>€19,950</td><td>68,319</td><td>2019</td><td>Too old (2019), petrol only</td></tr>
+      <tr><td>Toyota RAV4 D-4D</td><td>€14,950</td><td>12,000</td><td>2026</td><td>Diesel, not hybrid</td></tr>
+      <tr><td>Honda CR-V 2.0HEV Comfort</td><td>€25,995</td><td>114,998</td><td>2019</td><td>Over mileage, too old</td></tr>
+      <tr><td>Honda CR-V 2.0 HEV Elegance</td><td>€27,995</td><td>100,998</td><td>2019</td><td>Over mileage, too old</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Results per model -->
+  <h2 style="margin-top:2rem;">📊 Results by Model</h2>
+  <table>
+    <thead>
+      <tr><th>Model</th><th>Status</th><th>Best Found</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Honda CR-V Hybrid</td><td style="color:var(--danger)">❌ Not found</td><td>Cheapest: €25,995 (114k km, 2019)</td></tr>
+      <tr><td>Toyota RAV4 Hybrid</td><td style="color:var(--danger)">❌ Not found</td><td>Cheapest: €29,950 (83k km) — over budget</td></tr>
+      <tr><td>Nissan X-Trail e-Power</td><td style="color:var(--danger)">❌ Not found</td><td>Cheapest: €36,950 (27k km) — over budget</td></tr>
+      <tr><td>Kia Sportage Hybrid</td><td style="color:var(--warn)">⚠️ Partial</td><td>€23,450 (74k km) — MHEV, too old</td></tr>
+      <tr><td style="font-weight:700;color:var(--accent)">Hyundai Tucson HEV</td><td style="color:var(--accent)">✅ Found!</td><td>€27,750 (41k km, 2023) — in budget!</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Manual Search Links -->
+  <div class="card" style="margin-top:1.5rem;">
+    <h2 style="margin-bottom:.5rem;font-size:1.1rem;">🔍 Manual Search Links</h2>
+    <p style="color:var(--muted);font-size:.9rem;margin-bottom:.75rem;">Open these in your browser (some block automation):</p>
+    <div style="font-size:.85rem;">
+      <div style="margin-bottom:.5rem;">
+        <strong>DoneDeal</strong> — Hybrid SUVs, €20k–€28k, &lt;70k km, 2021+<br>
+        <a href="https://www.donedeal.ie/cars/SUV-4x4-and-Pick-up/?mileageTo=70000&fuel=Hybrid&priceFrom=20000&priceTo=28000&registeredAfter=2021&sort=Price%20-%20low%20to%20high" target="_blank" style="color:var(--primary);">Open DoneDeal Search →</a>
+      </div>
+      <div>
+        <strong>Webgoto</strong> — Import dealers (UK/German imports)<br>
+        <a href="https://www.webgoto.com/en/car-search?query=honda+cr-v+hybrid&price-max=28000" target="_blank" style="color:var(--primary);">Open Webgoto →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Next Steps -->
+  <div class="next-steps">
+    <h2>➡️ Next Steps</h2>
+    <ol>
+      <li>Open the <strong>DoneDeal</strong> link above in your browser — it may have listings the scrapers couldn't reach</li>
+      <li>Contact dealers about the <strong>Hyundai Tucson HEV</strong> in Cork — ask about Dublin delivery</li>
+      <li>Consider relaxing budget to <strong>€30,000</strong> to open up CR-V and RAV4 options</li>
+      <li>Check UK import dealers Webgotocar and Continental Cars Dublin for German-imported CR-Vs</li>
+      <li>Re-run scrapers weekly — Irish car market turns over fast</li>
+    </ol>
+  </div>
+
+  <footer>
+    <p>car-finder · <a href="https://github.com/PrashanthHRao/car-finder" target="_blank" style="color:var(--primary);">GitHub</a> · Last updated June 2026</p>
+  </footer>
+
+</div>
+</body>
+</html>
