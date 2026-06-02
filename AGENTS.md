@@ -1,83 +1,39 @@
 # Car Finder — Agent Context
 
 ## Project Goal
-Find the best used **Hybrid SUV** in Ireland (Dublin) within a **€25k–€28k budget** (2021+ models) that prioritizes reliability, smooth automatic shifting, excellent fuel economy, and family usability (two infant car seats).
+Personal project: Find the best used **Hybrid** (SUV/Sedan) in Ireland within **€30k max** (sweet spot €26k), **2021+ model**, **<70k km**, prioritizing Japanese/Korean brands for low repair costs and reliability. Family use (two infant car seats).
 
-## Constraints & Preferences
-- **Budget:** €25k–€28k max.
-- **Type:** Hybrid, Automatic, SUV.
-- **Year:** 2021 or newer.
-- **Key Features:** Wireless CarPlay, heated steering wheel, heated seats, low mileage (`<70k km`), smooth gear shifts.
-- **Family Needs:** Must comfortably fit two infant car seats side-by-side.
-- **Location:** Dublin area; open to imports via local dealers.
-- **Running Costs:** Low repair/service costs critical.
+## Selection Criteria
+- **Budget:** €26k sweet spot, €30k hard max.
+- **Type:** HEV or PHEV only (no MHEV, no petrol/diesel).
+- **Year:** 2021+ strictly (newer the better).
+- **Mileage:** <70,000 km.
+- **Brands:** Toyota, Honda, Lexus, Hyundai, Kia, Mitsubishi, Mazda.
+- **Excluded:** Suzuki, European premium (BMW, Audi, Mercedes, Volvo, VW, Mini), Ford, MG, Nissan, Renault, Peugeot.
+- **Transmission:** e-CVT (Toyota/Honda/Lexus) >> 6-speed HEV (Hyundai/Kia) >> single-speed (Outlander PHEV).
+- **Dealer:** Must offer nationwide service + 1-year warranty.
+- **Location:** Anywhere in Ireland (most dealers offer delivery).
 
-## Candidates (priority order)
-| Priority | Make | Model | Transmission | Notes |
-|----------|------|-------|-------------|-------|
-| 1 | **Honda** | **CR-V Hybrid** | e-CVT | Smoothest, best rear seat width, reliable, but over budget usually |
-| 2 | **Toyota** | **RAV4 Hybrid** | e-CVT | Excellent MPG, reliable, but center console may impede driver legroom |
-| 3 | **Nissan** | **X-Trail e-Power** | e-Power (EV drive) | Great space but lower MPG, less proven long-term |
-| 4 | **Kia** | **Sportage Hybrid** | 6-speed auto | Good value but transmission less smooth; PHEV variants common |
-| 5 | **Hyundai** | **Tucson Hybrid** | 6-speed auto | Similar to Sportage; HEV variant is smoother than standard 6-speed |
+## Top 5 Picks (current market)
 
-## Transmission Decisions
-- **Preferred:** e-CVT (Toyota/Honda) and e-Power (Nissan) — infinitely smooth, no gear shifts.
-- **Acceptable:** Hyundai/Kia 6-speed auto in HEV — electric motor fills torque gaps, smoother than standard.
-- **Eliminated:** DSG/DCT (VW/Skoda) — low-speed jerkiness; 6-speed auto in MHEV — not smooth enough.
+| # | Car | Price | Year | km | Location | Why |
+|---|-----|-------|------|----|----------|-----|
+| 1 | **Hyundai Tucson Comfort Plus HEV** | €27,750 | 2023 | 41k | Cork | Best family SUV, free delivery, 7yr warranty, wireless CarPlay |
+| 2 | **Kia Niro K3 HEV** | €26,950 | 2023 | 51k | Dublin | Heated steering wheel, heated seats, 7yr warranty |
+| 3 | **Toyota Corolla Cross Hybrid G** | €29,950 | 2022 | 35k | Dublin | New SUV model, e-CVT, Toyota reliability |
+| 4 | **Mitsubishi Outlander Black Edition PHEV** | €27,950 | 2021 | 45k | Dublin | 7 seats, 4WD, PHEV, heated steering wheel |
+| 5 | **Toyota Corolla Hybrid G** | €24,950 | 2024 | 22k | Dublin | Best value, nearly new, e-CVT |
 
-## Scraping Status
+## Dashboard
+- **URL:** https://prashanthhrao.github.io/car-finder/
+- **Deploy:** Push to `main` → GitHub Actions deploys via Pages.
+- **Data:** Inline in `index.html` (TRIMS + LISTINGS arrays).
 
-### carzone.ie ✅ Working
-Direct URL navigation works (`/used-cars/{make}/{model}?fuel-type=HYBRID&transmission=AUTOMATIC&price=0-{max}&mileage=0-{max}`). Filters apply via URL params.
+## Scraping
+- **Working:** CarsIreland (block Didomi consent script), Carzone (limited results).
+- **Blocked:** DoneDeal (Cloudflare), AutoTrader (IP block).
+- **Run from:** `node scrape_expanded.js 30000 70000 2021`.
 
-### carsireland.ie ✅ Working (requires Didomi block)
-- Block Didomi consent script: `context.route('**/didomi**', route => route.abort())`
-- URL format: `https://www.carsireland.ie/used-cars/{make}/{model}?maxprice={max}&maxmileage={max}&yearmin={min}`
-- URL params pre-populate filter UI but don't auto-submit — need to post-filter results in JS
-- API endpoint discovered: `https://privateapi.carsireland.ie` and `rest/1.0/ci/filters`
-
-### donedeal.ie ❌ Cloudflare blocked
-Donedeal uses Cloudflare managed challenge. Cannot bypass via Playwright. User must open link manually.
-
-### autotrader.ie ❌ Network blocked
-`ERR_CONNECTION_REFUSED` — IP/network level block.
-
-## Carzone Results (within €28k, <70k km, 2021+)
-| Model | Match? | Details |
-|-------|--------|---------|
-| Honda CR-V Hybrid | ❌ | Cheapest: €25,995 with 114k km (over mileage) |
-| Toyota RAV4 Hybrid | ❌ | Cheapest: €29,950 with 83k km (over budget) |
-| Nissan X-Trail Hybrid | ❌ | Cheapest: €28,950 with 89k km |
-| Kia Sportage Hybrid | ❌ | Cheapest: €23,450 with 74k km (MHEV, not full hybrid) |
-| Hyundai Tucson Hybrid | ❌ | Cheapest: €33,950 |
-
-## CarsIreland Results (within €28k, <70k km, 2021+)
-| Model | Match? | Details |
-|-------|--------|---------|
-| Honda CR-V Hybrid | ❌ | None in range |
-| Toyota RAV4 Hybrid | ❌ | None in range |
-| Nissan X-Trail Hybrid | ❌ | None in range |
-| Kia Sportage Hybrid | ❌ | 2019 K3 at €19,950 (too old) |
-| Hyundai Tucson HEV | ✅ **€27,750** — 41k km — 2023 — Cork | Only solid match across all sites |
-
-## How to Run
-```powershell
-npm install
-npx playwright install chromium
-npm run scrape:carsireland    # Scrapes CarsIreland only
-npm run scrape:carzone        # Would need scrape_carzone.js (not yet written for this repo)
-npm run scrape:all            # Runs all scrapers
-```
-
-## Current Best Lead
-**Hyundai Tucson Comfort Plus HEV** — €27,750 — 41,000 km — 2023 (231 reg) — Cork
-- Full hybrid (self-charging), 1.6 T-GDI + 44kW electric motor
-- 6-speed auto with hybrid-specific tuning (smoother than standard 6-speed)
-- Link: https://www.carsireland.ie/used-cars/hyundai/tucson
-
-## Next Steps for Agent
-1. Re-run scrapers to check for new listings (markets change daily)
-2. If DoneDeal link yields results, parse and compare
-3. Consider relaxing budget to €30k or mileage to 80k km for more options
-4. Search UK import dealers (Webgotocar, Continental Cars) for CR-V Hybrids
+## NI Imports
+- Windsor Framework: NI-registered hybrids = 0% customs duty + 0% import VAT. Pay only VRT in ROI.
+- Use `usedcarsni.com` to search. Must verify NI ownership history before purchase.

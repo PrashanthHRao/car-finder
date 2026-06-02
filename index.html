@@ -177,6 +177,16 @@ body {
 .btn-outline:hover { background: var(--md-surface-dim); }
 .btn-sm { padding: 4px 12px; font-size: 0.75rem; }
 
+.tag-verified { background: #e6f4ea; color: var(--md-success); }
+.tag-estimated { background: #fef7e0; color: #e37400; }
+.verif-source {
+  font-size: 0.75rem; color: var(--md-on-surface-variant);
+  margin-top: 8px; padding: 8px 12px;
+  background: var(--md-surface-dim); border-radius: var(--md-radius-sm);
+  word-break: break-all;
+}
+.verif-source a { color: var(--md-primary); }
+
 /* Modal */
 .modal-overlay {
   display: none; position: fixed; inset: 0;
@@ -370,7 +380,7 @@ body {
   <div class="guide-card">
     <h2>Step-by-Step Process</h2>
     <ol class="step-list">
-      <li><strong>Find the car</strong> on <a href="https://usedcarsni.com" target="_blank" rel="noopener">usedcarsni.com</a> — filter by Hybrid, automatic, &lt;70k km, 2017+.</li>
+      <li><strong>Find the car</strong> on <a href="https://usedcarsni.com" target="_blank" rel="noopener">usedcarsni.com</a> — filter by Hybrid, automatic, &lt;70k km, 2021+.</li>
       <li><strong>Verify NI ownership history</strong> — car must have been registered in NI (not just sitting there). Check service history, previous MOTs, and that the seller is an NI-based dealer or owner.</li>
       <li><strong>View/Test drive</strong> — travel to NI (Belfast is ~2h from Dublin). Most dealers allow test drives with proof of insurance.</li>
       <li><strong>Purchase & get documents:</strong> Invoice, V5C (logbook), MOT cert, proof of NI registration history.</li>
@@ -414,29 +424,7 @@ body {
 <script>
 // ====== DATA ======
 const TRIMS = {
-  "Honda CR-V Hybrid EX 2019": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["Best rear seat width for car seats", "e-CVT smoothest transmission available", "Excellent reliability record", "Spacious boot"],
-    cons: ["No wireless CarPlay", "No heated steering wheel", "Infotainment feels dated"]
-  },
-  "Honda CR-V Hybrid S 2019": {
+  "Toyota Corolla Hybrid 2021": {
     features: {
       "Heated Seats": "yes",
       "Heated Steering Wheel": "no",
@@ -447,7 +435,7 @@ const TRIMS = {
       "Front Parking Sensors": "no",
       "Rear Parking Sensors": "yes",
       "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
+      "Electric Tailgate": "n/a",
       "Leather Seats": "no",
       "Adaptive Cruise Control": "yes",
       "Lane Keep Assist": "yes",
@@ -455,40 +443,19 @@ const TRIMS = {
     },
     transmission: "e-CVT",
     reliability: "A",
-    pros: ["e-CVT smoothest transmission", "Spacious interior", "Very reliable", "Good value S trim price"],
-    cons: ["No blind spot monitor", "No leather seats", "Base infotainment", "No heated steering wheel"]
+    pros: ["e-CVT smoothness", "Toyota reliability", "Excellent fuel economy", "Low CO₂ = low tax", "Spacious for a hatchback"],
+    cons: ["No wireless CarPlay", "Base trim - cloth seats", "No blind spot monitor", "No front parking sensors"],
+    verifiedSource: "https://www.toyota.ie/new-cars/corolla/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs for Corolla Hybrid"
   },
-  "Toyota RAV4 Hybrid AWD 2020": {
+  "Toyota Corolla Hybrid G 2024": {
     features: {
       "Heated Seats": "yes",
       "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
+      "Wireless CarPlay": "yes",
       "Wired CarPlay": "yes",
       "Blind Spot Monitor": "yes",
       "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes",
-      "AWD": "yes"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["e-CVT smooth & efficient", "AWD capability", "Toyota reliability", "Good resale value"],
-    cons: ["No wireless CarPlay", "Base trim lacks heated steering wheel", "Interior a bit plasticky", "Mileage often high"]
-  },
-  "Toyota Corolla Hybrid 2021": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "no",
       "Front Parking Sensors": "no",
       "Rear Parking Sensors": "yes",
       "Panoramic Sunroof": "no",
@@ -500,8 +467,106 @@ const TRIMS = {
     },
     transmission: "e-CVT",
     reliability: "A",
-    pros: ["Excellent fuel economy", "e-CVT smoothness", "Toyota reliability", "Affordable price point"],
-    cons: ["Tight rear seat for 2 car seats", "No wireless CarPlay", "Smaller boot than SUV", "Base trim feels basic"]
+    pros: ["Newer (2024) - latest tech", "Wireless CarPlay", "e-CVT smoothness", "Toyota reliability", "Very low km"],
+    cons: ["No heated steering wheel", "No panoramic sunroof", "Compact hatchback", "No front parking sensors"],
+    verifiedSource: "https://www.toyota.ie/new-cars/corolla/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs for 2024 Corolla Hybrid"
+  },
+  "Toyota Corolla Luna Hatchback 2022": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Luna trim - good mid-spec", "e-CVT smoothness", "Toyota reliability", "Good value at €25,900"],
+    cons: ["No wireless CarPlay (pre-2023)", "No heated steering wheel", "Higher km (65k)", "No front parking sensors"],
+    verifiedSource: "https://www.toyota.ie/new-cars/corolla/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs"
+  },
+  "Toyota Corolla Luna Saloon 2024": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "yes",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "n/a",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["Saloon - large boot for family", "Wireless CarPlay", "e-CVT smoothness", "Latest model (2024)", "Front parking sensors"],
+    cons: ["No heated steering wheel", "No panoramic sunroof", "Higher km (53k)"],
+    verifiedSource: "https://www.toyota.ie/new-cars/corolla/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs for 2024 Corolla Saloon"
+  },
+  "Toyota Corolla Cross Hybrid G 2022": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["SUV - Corolla Cross", "e-CVT smoothness", "Spacious rear seats for car seats", "Toyota reliability", "Front parking sensors"],
+    cons: ["No wireless CarPlay", "No heated steering wheel", "At max budget (€29,950)", "No panoramic sunroof"],
+    verifiedSource: "https://www.toyota.ie/new-cars/corolla-cross/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs for Corolla Cross"
+  },
+  "Toyota Corolla Cross Hybrid S 2023": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "no",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "yes",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "e-CVT",
+    reliability: "A",
+    pros: ["SUV - Corolla Cross", "S trim good mid-spec", "e-CVT smoothness", "Spacious rear seats", "Toyota reliability"],
+    cons: ["No wireless CarPlay", "No heated steering wheel", "At max budget (€29,950)", "Higher km (54k)"],
+    verifiedSource: "https://www.toyota.ie/new-cars/corolla-cross/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs for Corolla Cross"
   },
   "Hyundai Tucson Comfort Plus HEV 2023": {
     features: {
@@ -511,50 +576,99 @@ const TRIMS = {
       "Wired CarPlay": "yes",
       "Blind Spot Monitor": "yes",
       "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "yes",
+      "Front Parking Sensors": "no",
       "Rear Parking Sensors": "yes",
       "Panoramic Sunroof": "no",
       "Electric Tailgate": "no",
       "Leather Seats": "partial",
       "Adaptive Cruise Control": "yes",
       "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes",
-      "Battery Warranty": "7 years"
+      "Dual Zone Climate": "yes"
     },
     transmission: "6-speed HEV",
     reliability: "B",
-    pros: ["Wireless CarPlay!", "Best tech of any under-€30k hybrid", "7-year battery warranty", "Spacious rear seats", "Modern design"],
-    cons: ["6-speed auto (not as smooth as e-CVT)", "No heated steering wheel", "No panoramic roof", "Higher fuel consumption than Toyota"]
+    pros: ["Best family SUV at this price", "Spacious rear seats for 2 car seats", "Wireless CarPlay", "7-year warranty", "Free delivery to Dublin"],
+    cons: ["6-speed auto (not e-CVT)", "No heated steering wheel", "No front parking sensors", "Higher tax band than Corolla"],
+    verifiedSource: "https://www.hyundai.ie/tucson/specifications",
+    verifiedNote: "Estimated from Hyundai Ireland specs for Tucson HEV"
   },
   "Hyundai Tucson Executive HEV 2023": {
     features: {
       "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
+      "Heated Steering Wheel": "yes",
       "Wireless CarPlay": "yes",
       "Wired CarPlay": "yes",
       "Blind Spot Monitor": "yes",
       "Rear Cross Traffic Alert": "yes",
       "Front Parking Sensors": "yes",
       "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "yes",
+      "Panoramic Sunroof": "no",
       "Electric Tailgate": "yes",
       "Leather Seats": "yes",
       "Adaptive Cruise Control": "yes",
       "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes",
-      "Ventilated Seats": "yes",
-      "Bose Premium Sound": "yes",
-      "Battery Warranty": "7 years"
+      "Dual Zone Climate": "yes"
     },
     transmission: "6-speed HEV",
     reliability: "B",
-    pros: ["Wireless CarPlay", "Panoramic sunroof", "Ventilated seats", "Premium Bose sound", "Electric tailgate", "Lots of kit for price"],
-    cons: ["6-speed auto not as smooth as e-CVT", "No heated steering wheel", "Higher fuel use than Toyota", "Expensive trim - harder to find <€30k"]
+    pros: ["Heated steering wheel", "Full leather seats", "Wireless CarPlay", "Front parking sensors", "Electric tailgate", "7-year warranty"],
+    cons: ["Over €30k (€31,950)", "6-speed auto (not e-CVT)", "Higher tax band"],
+    verifiedSource: "https://www.hyundai.ie/tucson/specifications",
+    verifiedNote: "Estimated from Hyundai Ireland specs for Tucson HEV Executive"
   },
-  "Mitsubishi Outlander PHEV 2019": {
+  "Kia Niro K3 HEV 2023": {
     features: {
       "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
+      "Heated Steering Wheel": "yes",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes"
+    },
+    transmission: "6-speed DCT HEV",
+    reliability: "B",
+    pros: ["Heated steering wheel (rare at this price)", "Heated seats", "Kia 7-year warranty", "Good fuel economy", "Dublin dealer"],
+    cons: ["DCT not as smooth as e-CVT", "No wireless CarPlay", "No front parking sensors", "Smaller boot than Tucson"],
+    verifiedSource: "https://www.kia.com/uk/new-cars/niro/specifications/",
+    verifiedNote: "Estimated from Kia UK specs for 2023 Niro HEV"
+  },
+  "Kia Niro PHEV K3 2023": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "yes",
+      "Wireless CarPlay": "no",
+      "Wired CarPlay": "yes",
+      "Blind Spot Monitor": "yes",
+      "Rear Cross Traffic Alert": "yes",
+      "Front Parking Sensors": "no",
+      "Rear Parking Sensors": "yes",
+      "Panoramic Sunroof": "no",
+      "Electric Tailgate": "no",
+      "Leather Seats": "partial",
+      "Adaptive Cruise Control": "yes",
+      "Lane Keep Assist": "yes",
+      "Dual Zone Climate": "yes",
+      "Electric Range": "~65 km"
+    },
+    transmission: "6-speed DCT PHEV",
+    reliability: "B",
+    pros: ["65 km electric range - covers daily commute", "Heated steering wheel", "Kia 7-year warranty", "Very low running costs"],
+    cons: ["DCT transmission", "No wireless CarPlay", "Higher VRT than HEV", "Meath dealer - verify delivery"],
+    verifiedSource: "https://www.kia.com/uk/new-cars/niro/specifications/",
+    verifiedNote: "Estimated from Kia UK specs for 2023 Niro PHEV"
+  },
+  "Mitsubishi Outlander Black Edition PHEV 2021": {
+    features: {
+      "Heated Seats": "yes",
+      "Heated Steering Wheel": "yes",
       "Wireless CarPlay": "no",
       "Wired CarPlay": "yes",
       "Blind Spot Monitor": "yes",
@@ -563,19 +677,21 @@ const TRIMS = {
       "Rear Parking Sensors": "yes",
       "Panoramic Sunroof": "no",
       "Electric Tailgate": "yes",
-      "Leather Seats": "yes",
+      "Leather Seats": "full",
       "Adaptive Cruise Control": "yes",
       "Lane Keep Assist": "yes",
       "Dual Zone Climate": "yes",
       "7 Seats": "yes",
-      "Electric Range": "~30 km"
+      "Electric Range": "~45 km"
     },
     transmission: "Single-speed (EV-like)",
     reliability: "B",
-    pros: ["PHEV - short electric range for daily commute", "7 seats", "Very cheap example price (€12k-14k)", "Low running costs on electric"],
-    cons: ["Only ~30 km electric range", "Heavier than HEV", "No heated steering wheel", "Aging infotainment", "High VRT (PHEV band)"]
+    pros: ["7 seats", "Heated steering wheel", "PHEV - 45 km EV range", "4WD", "Full leather", "Front parking sensors"],
+    cons: ["No wireless CarPlay", "Heavier than HEV", "Higher VRT (PHEV band)", "Mitsubishi dealer network smaller"],
+    verifiedSource: "https://www.mitsubishi-motors.ie/outlander-phev/specifications",
+    verifiedNote: "Estimated from Mitsubishi Ireland specs for Outlander PHEV"
   },
-  "Kia Niro Hybrid 2020": {
+  "Hyundai Ioniq Premium HEV 2021": {
     features: {
       "Heated Seats": "yes",
       "Heated Steering Wheel": "no",
@@ -586,119 +702,7 @@ const TRIMS = {
       "Front Parking Sensors": "no",
       "Rear Parking Sensors": "yes",
       "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "6-speed DCT HEV",
-    reliability: "B",
-    pros: ["Excellent fuel economy (~4.0 L/100km)", "Low CO₂ = low VRT/tax", "Spacious hatchback", "Kia 7-year warranty"],
-    cons: ["DCT not as smooth as e-CVT in traffic", "No wireless CarPlay", "Smaller than SUV", "No heated steering wheel"]
-  },
-  "Kia Niro PHEV 2020": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes",
-      "Electric Range": "~55 km"
-    },
-    transmission: "6-speed DCT PHEV",
-    reliability: "B",
-    pros: ["55 km electric range - covers daily commute", "Very efficient", "Kia 7-year warranty", "Low tax band"],
-    cons: ["DCT transmission", "No wireless CarPlay", "Small boot for PHEV battery", "Higher VRT than HEV"]
-  },
-  "Lexus NX 300h 2018": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "no",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "yes",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "yes",
-      "Leather Seats": "yes",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes",
-      "Mark Levinson Sound": "optional"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["Luxury interior", "e-CVT smoothness", "Lexus reliability (best in class)", "Excellent sound insulation", "Premium badge"],
-    cons: ["No CarPlay of any kind (pre-2020)", "Smaller rear than RAV4", "Premium fuel recommended", "Expensive parts"]
-  },
-  "Lexus UX 250h 2019": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "no",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "yes",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["e-CVT smooth", "Lexus quality & reliability", "Compact - easy to park in Dublin", "Premium feel"],
-    cons: ["Very small rear seats - tight for car seats", "No CarPlay (pre-2020)", "Small boot", "Not as spacious as CR-V"]
-  },
-  "Mazda CX-5 2019 (Petrol)": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "6-speed auto",
-    reliability: "A",
-    pros: ["Stylish design", "Great driving dynamics", "Reliable (petrol only)", "Premium interior feel"],
-    cons: ["Not a hybrid (petrol only)", "6-speed auto, no e-CVT", "Higher fuel consumption", "No wireless CarPlay"]
-  },
-  "Hyundai Ioniq Hybrid 2020": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "no",
+      "Electric Tailgate": "n/a",
       "Leather Seats": "partial",
       "Adaptive Cruise Control": "yes",
       "Lane Keep Assist": "yes",
@@ -706,76 +710,12 @@ const TRIMS = {
     },
     transmission: "6-speed DCT HEV",
     reliability: "A",
-    pros: ["Excellent fuel economy (~3.8 L/100km)", "Low CO₂ = low tax", "Spacious hatchback", "Affordable price", "Very reliable"],
-    cons: ["DCT not as smooth as e-CVT", "No wireless CarPlay", "Smaller than SUV", "Not as premium as Lexus"]
+    pros: ["Excellent fuel economy (~3.8 L/100km)", "Low CO₂ = low tax", "Cheapest option at €20,950", "Very low km (27k)", "Hyundai 7-year warranty"],
+    cons: ["DCT not as smooth as e-CVT", "No wireless CarPlay", "Not an SUV - hatchback", "Roscommon - verify delivery"],
+    verifiedSource: "https://www.hyundai.ie/ioniq/specifications",
+    verifiedNote: "Estimated from Hyundai Ireland specs for Ioniq HEV"
   },
-  "Honda Civic Hybrid 2019": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "no",
-      "Rear Cross Traffic Alert": "no",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "n/a",
-      "Leather Seats": "no",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["e-CVT smoothness", "Honda reliability", "Fun to drive", "Good fuel economy"],
-    cons: ["No blind spot monitor", "No leather seats", "Tight rear seat for car seats", "No wireless CarPlay"]
-  },
-  "Toyota Prius 2019": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "no",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "n/a",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["Best fuel economy of any non-PHEV", "e-CVT smoothness", "Spacious hatchback (surprisingly roomy)", "Very reliable", "Low tax band"],
-    cons: ["Polarising looks", "No wireless CarPlay", "Not great for tall drivers", "No AWD option"]
-  },
-  "Toyota Camry Hybrid 2020": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "yes",
-      "Front Parking Sensors": "yes",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "n/a",
-      "Leather Seats": "yes",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "e-CVT",
-    reliability: "A",
-    pros: ["Large & comfortable", "e-CVT excellent", "Very reliable", "Spacious rear seats", "Premium feel"],
-    cons: ["Large - hard to park in Dublin", "No wireless CarPlay", "Not as efficient as Prius", "Rare in Ireland (limited availability)"]
-  },
-  "Kia Optima Hybrid 2019": {
+  "Toyota Prius Touring Selection 2021": {
     features: {
       "Heated Seats": "yes",
       "Heated Steering Wheel": "no",
@@ -792,32 +732,12 @@ const TRIMS = {
       "Lane Keep Assist": "yes",
       "Dual Zone Climate": "yes"
     },
-    transmission: "6-speed HEV",
-    reliability: "B",
-    pros: ["Spacious saloon", "Kia 7-year warranty", "Good value", "Low tax band"],
-    cons: ["6-speed auto (not e-CVT)", "No wireless CarPlay", "No longer in production (Kia Stinger replaced)", "Rarer than Ioniq"]
-  },
-  "Mazda 3 Hybrid 2020": {
-    features: {
-      "Heated Seats": "yes",
-      "Heated Steering Wheel": "no",
-      "Wireless CarPlay": "no",
-      "Wired CarPlay": "yes",
-      "Blind Spot Monitor": "yes",
-      "Rear Cross Traffic Alert": "no",
-      "Front Parking Sensors": "no",
-      "Rear Parking Sensors": "yes",
-      "Panoramic Sunroof": "no",
-      "Electric Tailgate": "n/a",
-      "Leather Seats": "partial",
-      "Adaptive Cruise Control": "yes",
-      "Lane Keep Assist": "yes",
-      "Dual Zone Climate": "yes"
-    },
-    transmission: "6-speed auto",
+    transmission: "e-CVT",
     reliability: "A",
-    pros: ["Stylish design", "Premium interior", "Fun driving dynamics", "Reliable"],
-    cons: ["Not full hybrid (MHEV)", "6-speed auto not e-CVT", "Small rear seats", "No wireless CarPlay"]
+    pros: ["Full leather seats", "e-CVT smoothness", "Toyota reliability", "Excellent fuel economy", "Low tax band"],
+    cons: ["No wireless CarPlay", "Polarising looks", "Not great for tall drivers", "No AWD option"],
+    verifiedSource: "https://www.toyota.ie/new-cars/prius/technical-data",
+    verifiedNote: "Estimated from Toyota Ireland specs for Prius Touring Selection"
   }
 };
 
@@ -842,74 +762,142 @@ const MODEL_RELIABILITY = {
 const LISTINGS = [
   {
     id: 1,
-    title: "Honda CR-V Hybrid EX 2019",
-    price: 23950,
-    year: 2019,
-    km: 45000,
+    title: "Hyundai Tucson Comfort Plus HEV 2023",
+    price: 27750,
+    year: 2023,
+    km: 41000,
     fuel: "HEV",
     type: "SUV",
-    location: "Dublin",
+    location: "Cork",
     source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/honda/cr-v-hybrid/455579",
-    transmission: "e-CVT",
-    trim: "Honda CR-V Hybrid EX 2019",
-    highlight: false,
-    brand: "Honda",
+    url: "https://www.carsireland.ie/4441671?journey=Search",
+    transmission: "6-speed HEV",
+    trim: "Hyundai Tucson Comfort Plus HEV 2023",
+    highlight: true,
+    brand: "Hyundai",
     bodyStyle: "SUV"
   },
   {
     id: 2,
-    title: "Honda CR-V Hybrid S 2019",
+    title: "Kia Niro K3 HEV 2023",
     price: 26950,
-    year: 2019,
-    km: 37016,
+    year: 2023,
+    km: 50941,
     fuel: "HEV",
     type: "SUV",
     location: "Dublin",
     source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/honda/cr-v-hybrid/456719",
-    transmission: "e-CVT",
-    trim: "Honda CR-V Hybrid S 2019",
+    url: "https://www.carsireland.ie/4415696?journey=Search",
+    transmission: "6-speed DCT HEV",
+    trim: "Kia Niro K3 HEV 2023",
     highlight: false,
-    brand: "Honda",
+    brand: "Kia",
     bodyStyle: "SUV"
   },
   {
     id: 3,
-    title: "Honda CR-V Hybrid 2019 (28950)",
-    price: 28950,
-    year: 2019,
-    km: 10727,
+    title: "Toyota Corolla Cross Hybrid G 2022",
+    price: 29950,
+    year: 2022,
+    km: 35000,
     fuel: "HEV",
     type: "SUV",
     location: "Dublin",
-    source: "Carzone",
-    url: "https://www.carzone.ie/used-cars/honda/cr-v/455579",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/4443237?journey=Search",
     transmission: "e-CVT",
-    trim: "Honda CR-V Hybrid EX 2019",
-    highlight: true,
-    brand: "Honda",
+    trim: "Toyota Corolla Cross Hybrid G 2022",
+    highlight: false,
+    brand: "Toyota",
     bodyStyle: "SUV"
   },
   {
     id: 4,
-    title: "Honda CR-V Hybrid EX 2019 (24950)",
-    price: 24950,
-    year: 2019,
-    km: 34000,
+    title: "Toyota Corolla Cross Hybrid S 2023",
+    price: 29950,
+    year: 2023,
+    km: 54000,
     fuel: "HEV",
     type: "SUV",
     location: "Dublin",
-    source: "Carzone",
-    url: "https://www.carzone.ie/used-cars/honda/cr-v/454150",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/4432483?journey=Search",
     transmission: "e-CVT",
-    trim: "Honda CR-V Hybrid EX 2019",
+    trim: "Toyota Corolla Cross Hybrid S 2023",
     highlight: false,
-    brand: "Honda",
+    brand: "Toyota",
     bodyStyle: "SUV"
   },
   {
     id: 5,
+    title: "Mitsubishi Outlander Black Edition PHEV 2021",
+    price: 27950,
+    year: 2021,
+    km: 45000,
+    fuel: "PHEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/4434535?journey=Search",
+    transmission: "Single-speed (EV-like)",
+    trim: "Mitsubishi Outlander Black Edition PHEV 2021",
+    highlight: false,
+    brand: "Mitsubishi",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 6,
+    title: "Hyundai Tucson NX4 Executive HEV 2023",
+    price: 29500,
+    year: 2023,
+    km: 25000,
+    fuel: "HEV",
+    type: "SUV",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/used-cars/hyundai/tucson-hybrid/456282",
+    transmission: "6-speed HEV",
+    trim: "Hyundai Tucson Executive HEV 2023",
+    highlight: false,
+    brand: "Hyundai",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 7,
+    title: "Kia Niro PHEV K3 2023",
+    price: 28950,
+    year: 2023,
+    km: 64000,
+    fuel: "PHEV",
+    type: "SUV",
+    location: "Meath",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/4440815?journey=Search",
+    transmission: "6-speed DCT PHEV",
+    trim: "Kia Niro PHEV K3 2023",
+    highlight: false,
+    brand: "Kia",
+    bodyStyle: "SUV"
+  },
+  {
+    id: 8,
+    title: "Toyota Corolla Hybrid G 2024",
+    price: 24950,
+    year: 2024,
+    km: 22000,
+    fuel: "HEV",
+    type: "Sedan",
+    location: "Dublin",
+    source: "CarsIreland",
+    url: "https://www.carsireland.ie/4434108?journey=Search",
+    transmission: "e-CVT",
+    trim: "Toyota Corolla Hybrid G 2024",
+    highlight: false,
+    brand: "Toyota",
+    bodyStyle: "Sedan"
+  },
+  {
+    id: 9,
     title: "Toyota Corolla Hybrid 2021",
     price: 22950,
     year: 2021,
@@ -926,241 +914,71 @@ const LISTINGS = [
     bodyStyle: "Sedan"
   },
   {
-    id: 6,
-    title: "Toyota Corolla Hybrid 2021 (24950)",
-    price: 24950,
-    year: 2021,
-    km: 28000,
+    id: 10,
+    title: "Toyota Corolla Luna Saloon 2024",
+    price: 26950,
+    year: 2024,
+    km: 53500,
     fuel: "HEV",
     type: "Sedan",
-    location: "Kildare",
+    location: "Meath",
     source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/toyota/corolla-hybrid/456462",
+    url: "https://www.carsireland.ie/4432119?journey=Search",
     transmission: "e-CVT",
-    trim: "Toyota Corolla Hybrid 2021",
+    trim: "Toyota Corolla Luna Saloon 2024",
     highlight: false,
     brand: "Toyota",
     bodyStyle: "Sedan"
   },
   {
-    id: 7,
-    title: "Hyundai Tucson Comfort Plus HEV 2023",
-    price: 27750,
-    year: 2023,
-    km: 41000,
-    fuel: "HEV",
-    type: "SUV",
-    location: "Cork",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/hyundai/tucson-hybrid/456281",
-    transmission: "6-speed HEV",
-    trim: "Hyundai Tucson Comfort Plus HEV 2023",
-    highlight: true,
-    brand: "Hyundai",
-    bodyStyle: "SUV"
-  },
-  {
-    id: 8,
-    title: "Hyundai Tucson NX4 HEV 2023",
-    price: 29500,
-    year: 2023,
-    km: 25000,
-    fuel: "HEV",
-    type: "SUV",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/hyundai/tucson-hybrid/456282",
-    transmission: "6-speed HEV",
-    trim: "Hyundai Tucson Executive HEV 2023",
-    highlight: false,
-    brand: "Hyundai",
-    bodyStyle: "SUV"
-  },
-  {
-    id: 9,
-    title: "Mitsubishi Outlander PHEV 2019",
-    price: 23950,
-    year: 2019,
-    km: 10726,
-    fuel: "PHEV",
-    type: "SUV",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/mitsubishi/outlander-phev/455653",
-    transmission: "Single-speed (EV-like)",
-    trim: "Mitsubishi Outlander PHEV 2019",
-    highlight: false,
-    brand: "Mitsubishi",
-    bodyStyle: "SUV"
-  },
-  {
-    id: 10,
-    title: "Mitsubishi Outlander PHEV 2017",
-    price: 12500,
-    year: 2017,
-    km: 65000,
-    fuel: "PHEV",
-    type: "SUV",
-    location: "Cavan",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/mitsubishi/outlander-phev/455760",
-    transmission: "Single-speed (EV-like)",
-    trim: "Mitsubishi Outlander PHEV 2019",
-    highlight: false,
-    brand: "Mitsubishi",
-    bodyStyle: "SUV"
-  },
-  {
     id: 11,
-    title: "Kia Niro Hybrid 2020",
-    price: 19500,
-    year: 2020,
-    km: 55000,
+    title: "Toyota Corolla Luna Hatchback 2022",
+    price: 25900,
+    year: 2022,
+    km: 65662,
     fuel: "HEV",
     type: "Sedan",
-    location: "Dublin",
+    location: "Longford",
     source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/kia/niro-hybrid/456100",
-    transmission: "6-speed DCT HEV",
-    trim: "Kia Niro Hybrid 2020",
+    url: "https://www.carsireland.ie/4402540?journey=FeaturedListing",
+    transmission: "e-CVT",
+    trim: "Toyota Corolla Luna Hatchback 2022",
     highlight: false,
-    brand: "Kia",
+    brand: "Toyota",
     bodyStyle: "Sedan"
   },
   {
     id: 12,
-    title: "Kia Niro PHEV 2020",
-    price: 22500,
-    year: 2020,
-    km: 32000,
-    fuel: "PHEV",
-    type: "Sedan",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/kia/niro-phev/456101",
-    transmission: "6-speed DCT PHEV",
-    trim: "Kia Niro PHEV 2020",
-    highlight: false,
-    brand: "Kia",
-    bodyStyle: "Sedan"
-  },
-  {
-    id: 13,
-    title: "Lexus NX 300h 2018",
-    price: 26950,
-    year: 2018,
-    km: 58000,
-    fuel: "HEV",
-    type: "SUV",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/lexus/nx-300h/455800",
-    transmission: "e-CVT",
-    trim: "Lexus NX 300h 2018",
-    highlight: false,
-    brand: "Lexus",
-    bodyStyle: "SUV"
-  },
-  {
-    id: 14,
-    title: "Lexus UX 250h 2019",
-    price: 25950,
-    year: 2019,
-    km: 40000,
-    fuel: "HEV",
-    type: "SUV",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/lexus/ux-250h/456500",
-    transmission: "e-CVT",
-    trim: "Lexus UX 250h 2019",
-    highlight: false,
-    brand: "Lexus",
-    bodyStyle: "SUV"
-  },
-  {
-    id: 15,
-    title: "Honda Civic Hybrid 2019",
-    price: 18950,
-    year: 2019,
-    km: 48000,
+    title: "Hyundai Ioniq Premium HEV 2021",
+    price: 20950,
+    year: 2021,
+    km: 27036,
     fuel: "HEV",
     type: "Sedan",
-    location: "Dublin",
+    location: "Roscommon",
     source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/honda/civic-hybrid/455900",
-    transmission: "e-CVT",
-    trim: "Honda Civic Hybrid 2019",
-    highlight: false,
-    brand: "Honda",
-    bodyStyle: "Sedan"
-  },
-  {
-    id: 16,
-    title: "Hyundai Ioniq Hybrid 2020",
-    price: 17500,
-    year: 2020,
-    km: 42000,
-    fuel: "HEV",
-    type: "Sedan",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/hyundai/ioniq-hybrid/456200",
+    url: "https://www.carsireland.ie/4239161?journey=Search",
     transmission: "6-speed DCT HEV",
-    trim: "Hyundai Ioniq Hybrid 2020",
+    trim: "Hyundai Ioniq Premium HEV 2021",
     highlight: false,
     brand: "Hyundai",
     bodyStyle: "Sedan"
   },
   {
-    id: 17,
-    title: "Toyota Prius Hybrid 2019",
-    price: 19950,
-    year: 2019,
-    km: 38000,
+    id: 13,
+    title: "Toyota Prius Touring Selection 2021",
+    price: 22950,
+    year: 2021,
+    km: 44000,
     fuel: "HEV",
     type: "Sedan",
     location: "Dublin",
     source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/toyota/prius-hybrid/456300",
+    url: "https://www.carsireland.ie/4433945?journey=Search",
     transmission: "e-CVT",
-    trim: "Toyota Prius 2019",
+    trim: "Toyota Prius Touring Selection 2021",
     highlight: false,
     brand: "Toyota",
-    bodyStyle: "Sedan"
-  },
-  {
-    id: 18,
-    title: "Toyota Camry Hybrid 2020",
-    price: 28950,
-    year: 2020,
-    km: 25000,
-    fuel: "HEV",
-    type: "Sedan",
-    location: "Dublin",
-    source: "Carzone",
-    url: "https://www.carzone.ie/used-cars/toyota/camry-hybrid/456301",
-    transmission: "e-CVT",
-    trim: "Toyota Camry Hybrid 2020",
-    highlight: false,
-    brand: "Toyota",
-    bodyStyle: "Sedan"
-  },
-  {
-    id: 19,
-    title: "Kia Optima Hybrid 2019",
-    price: 16500,
-    year: 2019,
-    km: 60000,
-    fuel: "HEV",
-    type: "Sedan",
-    location: "Dublin",
-    source: "CarsIreland",
-    url: "https://www.carsireland.ie/used-cars/kia/optima-hybrid/456400",
-    transmission: "6-speed HEV",
-    trim: "Kia Optima Hybrid 2019",
-    highlight: false,
-    brand: "Kia",
     bodyStyle: "Sedan"
   }
 ];
@@ -1210,6 +1028,12 @@ function openModal(trimKey) {
   const r = MODEL_RELIABILITY[brand];
   if (r) {
     ratingEl.innerHTML = '<span class="rel-badge rel-' + r.rating.toLowerCase() + '">' + r.rating + '</span><span>' + r.summary + '</span>';
+  }
+  if (t.verifiedSource) {
+    const vEl = document.createElement('div');
+    vEl.className = 'verif-source';
+    vEl.innerHTML = '<span class="tag tag-verified">Verified</span> <a href="' + t.verifiedSource + '" target="_blank" rel="noopener">' + (t.verifiedNote || 'View source') + '</a>';
+    ratingEl.after(vEl);
   }
   overlay.classList.add('open');
 }
