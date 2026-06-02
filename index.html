@@ -250,14 +250,23 @@ body {
 .guide-card p, .guide-card li { font-size: 0.875rem; line-height: 1.6; color: var(--md-on-surface-variant); }
 .guide-card ul, .guide-card ol { padding-left: 20px; }
 .guide-card li { margin-bottom: 6px; }
-.step-list { counter-reset: step; }
+.step-list { counter-reset: step; padding-left: 0; list-style: none; }
 .step-list li {
   counter-increment: step;
-  padding-left: 8px;
+  padding: 8px 0 8px 36px;
+  position: relative;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
-.step-list li::marker {
-  content: "Step " counter(step) ": ";
-  font-weight: 600; color: var(--md-primary);
+.step-list li::before {
+  content: counter(step);
+  position: absolute; left: 0; top: 8px;
+  width: 26px; height: 26px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--md-primary); color: var(--md-on-primary);
+  font-size: 0.75rem; font-weight: 700;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 .info-box {
   background: var(--md-primary-light);
@@ -333,6 +342,7 @@ body {
 
   <div class="filter-bar" id="filterBar">
     <span class="filter-chip active" data-filter="all">All <span class="count" id="countAll">0</span></span>
+    <span class="filter-chip" data-filter="top5">Top 5 ⭐</span>
     <span class="filter-chip" data-filter="suv">SUV <span class="count" id="countSuv">0</span></span>
     <span class="filter-chip" data-filter="sedan">Sedan <span class="count" id="countSedan">0</span></span>
     <span class="filter-chip" data-filter="phev">PHEV <span class="count" id="countPhev">0</span></span>
@@ -381,23 +391,25 @@ body {
     <h2>Step-by-Step Process</h2>
     <ol class="step-list">
       <li><strong>Find the car</strong> on <a href="https://usedcarsni.com" target="_blank" rel="noopener">usedcarsni.com</a> — filter by Hybrid, automatic, &lt;70k km, 2021+.</li>
-      <li><strong>Verify NI ownership history</strong> — car must have been registered in NI (not just sitting there). Check service history, previous MOTs, and that the seller is an NI-based dealer or owner.</li>
+      <li><strong>Verify NI ownership history</strong> — car must have been registered in NI (not just sitting there). Check service history, previous MOTs, and that the seller is an NI-based dealer or owner. <a href="https://www.gov.uk/check-mot-history" target="_blank" rel="noopener">Check MOT history</a></li>
       <li><strong>View/Test drive</strong> — travel to NI (Belfast is ~2h from Dublin). Most dealers allow test drives with proof of insurance.</li>
       <li><strong>Purchase & get documents:</strong> Invoice, V5C (logbook), MOT cert, proof of NI registration history.</li>
       <li><strong>Arrange transport</strong> — drive it back or use a transporter (~€150–€300 from Belfast to Dublin).</li>
-      <li><strong>Pay VRT</strong> — use <a href="https://www.ros.ie/evrt-enquiry/vrtenquiry.jsp" target="_blank" rel="noopener">Revenue's VRT calculator</a> to estimate. For a €26k hybrid, expect ~€3k–€6k VRT depending on CO₂. Book an appointment at your local NCTS centre.</li>
-      <li><strong>Register in ROI</strong> — after VRT paid, you get an Irish registration number. Update insurance with the new reg.</li>
+      <li><strong>Pay VRT</strong> — use <a href="https://www.ros.ie/evrt-enquiry/vrtenquiry.jsp" target="_blank" rel="noopener">Revenue's VRT calculator</a> to estimate. For a €26k hybrid, expect ~€3k–€6k VRT depending on CO₂. Book an appointment at your local NCTS centre. <a href="https://www.revenue.ie/en/importing-vehicles-duty-free-allowances/guide-to-vrt/index.aspx" target="_blank" rel="noopener">Revenue VRT guide</a></li>
+      <li><strong>Register in ROI</strong> — after VRT paid, you get an Irish registration number. Update insurance with the new reg. <a href="https://www.ndls.ie/" target="_blank" rel="noopener">NDLS registration info</a></li>
       <li><strong>Total saving:</strong> Typically €2,000–€5,000 cheaper than identical ROI-listed car (sometimes more for higher-value vehicles).</li>
     </ol>
   </div>
 
   <div class="guide-card">
-    <h2>VRT Calculator & Resources</h2>
+    <h2>Official References</h2>
     <ul>
-      <li><a href="https://www.ros.ie/evrt-enquiry/vrtenquiry.jsp" target="_blank" rel="noopener">Revenue VRT Enquiry</a> — Check VRT owed before buying</li>
-      <li><a href="https://www.nidirect.gov.uk/mot" target="_blank" rel="noopener">NI MOT History Check</a> — Verify past MOT results</li>
-      <li><a href="https://usedcarsni.com" target="_blank" rel="noopener">usedcarsni.com</a> — NI marketplace</li>
-      <li><a href="https://www.donedeal.ie" target="_blank" rel="noopener">DoneDeal</a> — Filter by "Northern Ireland" location</li>
+      <li><a href="https://www.revenue.ie/en/importing-vehicles-duty-free-allowances/guide-to-vrt/index.aspx" target="_blank" rel="noopener">Revenue — VRT Guide for Imported Vehicles</a></li>
+      <li><a href="https://www.revenue.ie/en/importing-vehicles-duty-free-allowances/reliefs-and-exemptions/index.aspx" target="_blank" rel="noopener">Revenue — Customs Reliefs & Exemptions (Windsor Framework)</a></li>
+      <li><a href="https://www.nidirect.gov.uk/articles/vehicle-registration" target="_blank" rel="noopener">NIDirect — Vehicle Registration in NI</a></li>
+      <li><a href="https://www.gov.uk/check-mot-history" target="_blank" rel="noopener">GOV.UK — Check MOT History</a></li>
+      <li><a href="https://www.rsa.ie/services/vehicle-standards/vehicle-registration/ncts-testing" target="_blank" rel="noopener">RSA — NCTS Testing Appointments</a></li>
+      <li><a href="https://www.ros.ie/evrt-enquiry/vrtenquiry.jsp" target="_blank" rel="noopener">Revenue VRT Enquiry</a> — Check VRT owed for a specific vehicle</li>
     </ul>
     <div class="warn-box">
       <strong>⚠ Beware of "NI Delivery" scams</strong> — Some GB sellers offer "free NI delivery" to bypass customs. <strong>Only buy from NI-registered dealers</strong> with physical premises. The car must have NI service/MOT history to qualify for Windsor Framework benefits. If in doubt, ask for proof of NI registration before the sale.
@@ -983,6 +995,15 @@ const LISTINGS = [
   }
 ];
 
+const TOP5_IDS = [1, 2, 3, 5, 8];
+const TOP5_REASONS = {
+  1: "Best family SUV · Free Dublin delivery · Wireless CarPlay · 7yr warranty",
+  2: "Heated steering wheel · Dublin dealer · 7yr warranty · Great value",
+  3: "New SUV model (Corolla Cross) · e-CVT smoothest · Toyota reliability",
+  5: "7 seats · 4WD · PHEV · Heated steering wheel · Full leather",
+  8: "Nearly new (2024) · Best value at €24,950 · e-CVT · Low km"
+};
+
 // ====== RENDER ======
 let activeFilter = "all";
 let activeListings = [...LISTINGS];
@@ -1059,8 +1080,51 @@ function renderListings(listings) {
     container.innerHTML = '<div class="empty-state"><h2>No listings found</h2><p>Try adjusting your filters or budget.</p></div>';
     return;
   }
-  listings.sort((a, b) => a.price - b.price);
-  for (const l of listings) {
+  if (activeFilter === 'all' || activeFilter === 'top5') {
+    const top5 = listings.filter(l => TOP5_IDS.includes(l.id));
+    if (top5.length) {
+      const sec = document.createElement('div');
+      sec.innerHTML = '<h2 style="font-size:1.1rem;font-weight:600;margin:0 0 8px;color:var(--md-primary)">Top 5 Family Picks ⭐</h2>';
+      container.appendChild(sec);
+      top5.sort((a, b) => TOP5_IDS.indexOf(a.id) - TOP5_IDS.indexOf(b.id));
+      for (const l of top5) {
+        const card = document.createElement('div');
+        card.className = 'listing-card highlight';
+        const tags = [];
+        tags.push('<span class="tag tag-source">' + l.source + '</span>');
+        tags.push('<span class="tag tag-' + (l.fuel === 'PHEV' ? 'phev' : 'ev') + '">' + l.fuel + '</span>');
+        if (l.transmission.includes('e-CVT') || l.transmission.includes('EV-like')) {
+          tags.push('<span class="tag tag-ecvt">e-CVT</span>');
+        } else if (l.transmission.includes('speed')) {
+          tags.push('<span class="tag tag-hev6">' + l.transmission + '</span>');
+        }
+        const trim = TRIMS[l.trim];
+        card.innerHTML =
+          '<div class="listing-header">' +
+            '<div class="listing-title">' + getRelHTML(l.brand) + ' ' + l.title + '</div>' +
+            '<div class="listing-price">&euro;' + l.price.toLocaleString() + '</div>' +
+          '</div>' +
+          '<div class="listing-meta">' +
+            '<span>' + l.year + '</span>' +
+            '<span>' + l.km.toLocaleString() + ' km</span>' +
+            '<span>' + l.location + '</span>' +
+            '<span>' + l.type + '</span>' +
+            tags.join(' ') +
+          '</div>' +
+          '<div style="font-size:0.8125rem;color:var(--md-on-surface-variant);margin:4px 0 8px;padding:8px;background:#fef7e0;border-radius:6px">' + (TOP5_REASONS[l.id] || '') + '</div>' +
+          '<div class="listing-actions">' +
+            '<a href="' + l.url + '" target="_blank" rel="noopener" class="btn btn-primary btn-sm">View Listing</a>' +
+            (trim ? '<button class="btn btn-outline btn-sm" onclick="openModal(\'' + l.trim.replace(/'/g, "\\'") + '\')">View Features</button>' : '') +
+          '</div>';
+        container.appendChild(card);
+      }
+      const divider = document.createElement('div');
+      divider.style.cssText = 'height:1px;background:var(--md-outline);margin:16px 0';
+      container.appendChild(divider);
+    }
+  }
+  const otherListings = (activeFilter === 'top5') ? [] : (activeFilter === 'all' ? listings.filter(l => !TOP5_IDS.includes(l.id)) : listings);
+  for (const l of otherListings) {
     const card = document.createElement('div');
     card.className = 'listing-card' + (l.highlight ? ' highlight' : '');
     const tags = [];
@@ -1104,7 +1168,8 @@ function filterListings(filter) {
   activeFilter = filter;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.toggle('active', c.dataset.filter === filter));
   let filtered = [...LISTINGS];
-  if (filter === 'suv') filtered = filtered.filter(l => l.bodyStyle === 'SUV');
+  if (filter === 'top5') filtered = filtered.filter(l => TOP5_IDS.includes(l.id));
+  else if (filter === 'suv') filtered = filtered.filter(l => l.bodyStyle === 'SUV');
   else if (filter === 'sedan') filtered = filtered.filter(l => l.bodyStyle === 'Sedan');
   else if (filter === 'phev') filtered = filtered.filter(l => l.fuel === 'PHEV');
   else if (filter === 'hev') filtered = filtered.filter(l => l.fuel === 'HEV');
